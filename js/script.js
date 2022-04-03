@@ -1,0 +1,1 @@
+BeatemApp.init('myCanvas')
