@@ -9,7 +9,7 @@ class Enemy3 extends Enemy {
         this.rectangleColor = "black"
         this.characterSpeed = .2
 
-        this.characterLive = 50
+        this.characterLive = 200
 
 
         this.init()

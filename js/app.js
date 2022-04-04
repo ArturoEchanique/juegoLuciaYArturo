@@ -10,7 +10,9 @@ const BeatemApp = {
     screenSizeMultipler: 4,
     //% of screen that players have already completed
     screenProgress: 0,
+    screenCompleted: 0,
     screenEnd: 2688,
+    level: "0",
     backgroundSpeed: { x: 0, y: 0 },
     gameSize: { w: undefined, h: undefined },
     frames: 0,
@@ -47,14 +49,18 @@ const BeatemApp = {
     start() {
 
         setInterval(() => {
+            // console.log("screen completed:", this.screenCompleted)
+            // console.log("screen progress: ", this.screenProgress)
+            // console.log(this.enemies.length)
             this.clearAll()
             this.collectGarbage()
             this.drawAll()
             this.manageFrames()
             this.checkBulletsCollisions()
             this.checkPowerUpCollisions()
-            console.log(this.players[0].characterLive)
-            if (this.frames % 300 == 20) this.createEnemy()
+            if (this.frames % 500 == 0) this.trySpawnEnemies()
+
+            // if (this.frames % 300 == 20) this.createEnemy()
         }, 1000 / this.fps)
     },
 
@@ -65,22 +71,29 @@ const BeatemApp = {
         this.createBackground()
         this.createPowerUp(900)
         this.createPowerUp(1000)
+
+    },
+
+    trySpawnEnemies() {
+        if (this.screenCompleted < this.screenProgress && this.enemies.length == 0) {
+            this.createEnemies()
+        }
     },
 
     createPlayer() {
         this.players.push(new Player(this, 100, 0, 0, 50, 50, this.player1Keys))
     },
 
-    createEnemy() {
-        let newEnemy = new Enemy1(this, 200, 0, 0, 50, 50)
+    createEnemies() {
+        let newEnemy = new Enemy1(this, this.screenProgress + 500, 0, 0, 50, 50)
         this.enemies.push(newEnemy)
         newEnemy.chase()
 
-        newEnemy = new Enemy2(this, 400, 0, 0, 50, 50)
+        newEnemy = new Enemy2(this, this.screenProgress + 500, 0, 0, 50, 50)
         this.enemies.push(newEnemy)
         newEnemy.chase()
 
-        newEnemy = new Enemy3(this, 600, 0, 0, 50, 50)
+        newEnemy = new Enemy3(this, this.screenProgress + 500, 0, 0, 50, 50)
         this.enemies.push(newEnemy)
         newEnemy.chase()
 
@@ -134,6 +147,16 @@ const BeatemApp = {
 
     collectGarbage() {
         this.bullets = this.bullets.filter(bullet => bullet.getDrawPosX() > (0 - bullet.actorSize.w) && bullet.getDrawPosX() <= this.gameSize.w)
+        this.enemies = this.enemies.filter(enemy => enemy.isAlive)
+        // comprueba si no hay enemigos, y en ese caso, permite avanzar al jugador
+    },
+
+    updateScreenCompleted() {
+        console.log("checking for update screen")
+        if (this.enemies.length == 0) {
+            console.log("updating screen completed!!!!!!!!!!!!!")
+            this.screenCompleted = this.screenProgress
+        }
     },
 
 
@@ -155,10 +178,16 @@ const BeatemApp = {
     //tambien hay que hacer que encuanto encuentre un objetivo que dañe solo a ese y haga break, por lo que
     //el segundo foreach deberia ser un for clasico
     checkBulletsCollisions() {
+
         this.bullets.forEach(bullet => {
-            this.enemies.forEach(enemy => {
-                if (this.checkForCollision(bullet, enemy, 70)) this.enemies.splice(this.enemies.indexOf(enemy), 1)
-            })
+            for (let i = 0; i < this.enemies.length; i++) {
+                if (this.checkForCollision(bullet, this.enemies[i], 70)) {
+                    this.enemies[i].receiveDmg(bullet.dmg)
+                    this.checkAlive(this.enemies[i])
+                    this.bullets.splice(this.bullets.indexOf(bullet), 1)
+                    break
+                }
+            }
         })
     },
 
@@ -170,14 +199,12 @@ const BeatemApp = {
             this.enemies.forEach(enemy => {
                 if (this.checkForCollision(actorA, enemy, radius)) {
                     enemy.receiveDmg(dmg)
-                    if (enemy.characterLive <= 0) {
-                        this.killEnemy(enemy)
-                    }
+                    checkAlive(enemy)
                 }
             })
         }
 
-        console.log("proviene de clase enemigo", actorA instanceof Enemy)
+
         if (actorA instanceof Enemy) {
 
             this.players.forEach(player => {
@@ -192,6 +219,12 @@ const BeatemApp = {
 
     },
 
+    checkAlive(character) {
+        if (character.characterLive <= 0) {
+            character.die()
+        }
+    },
+
     //tambien hay que hacer que encuanto encuentre un objetivo que beneficie solo a ese y haga break, por lo que
     //el segundo foreach deberia ser un for clasico
     checkPowerUpCollisions() {
@@ -201,7 +234,7 @@ const BeatemApp = {
                 if (this.checkForCollision(powerUp, player, 70)) {
                     this.powerUps.splice(this.powerUps.indexOf(powerUp), 1)
                     player.upgradeWeapon()
-                    console.log("UPGRADING WEAPON!!!")
+
                 }
             })
         })
@@ -227,7 +260,11 @@ const BeatemApp = {
 
     //convendria que comprobase no solo el player 1 sino un compendio de todos
     updateBackgroundSpeed() {
-        if (this.players[0].getDrawPosX() >= this.gameSize.w * 0.8 && this.screenProgress < this.screenEnd - 5) {
+
+        if (this.enemies.length > 0) {
+            this.backgroundSpeed.x = 0
+        }
+        else if (this.players[0].getDrawPosX() >= this.gameSize.w * 0.8 && this.screenProgress < this.screenEnd - 5) {
             if (this.players[0].actorVel.x > 0) {
                 this.backgroundSpeed.x = this.players[0].actorVel.x
                 this.screenProgress += this.backgroundSpeed.x
@@ -237,9 +274,7 @@ const BeatemApp = {
             }
 
         }
-        else this.backgroundSpeed.x = 0
-
-        if (this.players[0].getDrawPosX() <= this.gameSize.w * 0.2 && this.screenProgress > 6) {
+        else if (this.players[0].getDrawPosX() <= this.gameSize.w * 0.2 && this.screenProgress > 6) {
             if (this.players[0].actorVel.x < 0) {
                 this.backgroundSpeed.x = this.players[0].actorVel.x
                 this.screenProgress += this.backgroundSpeed.x
@@ -249,11 +284,6 @@ const BeatemApp = {
             }
         }
         else this.backgroundSpeed.x = 0
-    },
-
-
-    killEnemy(enemy) {
-        this.enemies.splice(this.enemies.indexOf(enemy), 1)
     },
 
     killPlayer(player) {

@@ -8,6 +8,7 @@ class Character extends Actor {
         this.rectangleColor = "blue"
         this.characterLive = 100
         this.characterDmg = 50
+        this.isAlive = true
 
         //temporal
         this.weaponLevel = 0
@@ -56,7 +57,7 @@ class Character extends Actor {
         }
         else {
             for (let i = 0; i < this.weaponLevel; i++) {
-                this.app.shotBullet(this.actorPos.x, this.actorPos.y + i * 20, 0, 15, 15)
+                this.app.shotBullet(this.actorPos.x, this.actorPos.y + i * 20, this.actorPos.z, 15, 15)
             }
         }
 
@@ -68,5 +69,11 @@ class Character extends Actor {
         //solo para comprobar como recibe daño
         this.actorSize.h += 10
         this.actorSize.w += 10
+    }
+
+    die() {
+        this.isAlive = false
+        // de momento aqui
+        this.app.updateScreenCompleted()
     }
 }
