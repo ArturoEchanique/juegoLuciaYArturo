@@ -3,7 +3,8 @@ class Player extends Character {
     constructor(app, posX, posY, posZ, width, height, keys) {
         super(app, posX, posY, posZ, width, height)
         this.keys = keys
-        this.dirKeysPressed = { top: false, right: false, bottom: false, left: false }
+        this.characterLive = 200
+        this.dirKeysPressed = { top: false, right: false, down: false, left: false }
         this.rectangleColor = "yellow"
 
         //temporal
@@ -23,10 +24,10 @@ class Player extends Character {
         else if ((this.dirKeysPressed.left && !this.dirKeysPressed.right)) this.actorVel.x = -1 * this.characterSpeed
         else this.actorVel.x = 0
 
-        //Y AXIS
-        // if (this.dirKeysPressed.right && !this.dirKeysPressed.left) this.actorVel.x = 1
-        // else if ((this.dirKeysPressed.left && !this.dirKeysPressed.right)) this.actorVel.x = -1
-        // else this.actorVel.x = 0
+        //Z AXIS
+        if (this.dirKeysPressed.top && !this.dirKeysPressed.down) this.actorVel.z = 1
+        else if ((this.dirKeysPressed.down && !this.dirKeysPressed.top)) this.actorVel.z = -1
+        else this.actorVel.z = 0
     }
 
 

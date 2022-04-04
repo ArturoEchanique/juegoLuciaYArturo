@@ -14,7 +14,7 @@ const BeatemApp = {
     backgroundSpeed: { x: 0, y: 0 },
     gameSize: { w: undefined, h: undefined },
     frames: 0,
-    player1Keys: { jump: " ", top: "ArrowUp", right: "ArrowRight", bottom: "ArrowDown", left: "ArrowLeft", attack: "b" },
+    player1Keys: { jump: " ", top: "ArrowUp", right: "ArrowRight", down: "ArrowDown", left: "ArrowLeft", attack: "b" },
 
     background: undefined,
     players: [],
@@ -53,6 +53,7 @@ const BeatemApp = {
             this.manageFrames()
             this.checkBulletsCollisions()
             this.checkPowerUpCollisions()
+            console.log(this.players[0].characterLive)
             if (this.frames % 300 == 20) this.createEnemy()
         }, 1000 / this.fps)
     },
@@ -71,7 +72,19 @@ const BeatemApp = {
     },
 
     createEnemy() {
-        this.enemies.push(new Enemy(this, 600, 0, 0, 50, 50))
+        let newEnemy = new Enemy1(this, 200, 0, 0, 50, 50)
+        this.enemies.push(newEnemy)
+        newEnemy.chase()
+
+        newEnemy = new Enemy2(this, 400, 0, 0, 50, 50)
+        this.enemies.push(newEnemy)
+        newEnemy.chase()
+
+        newEnemy = new Enemy3(this, 600, 0, 0, 50, 50)
+        this.enemies.push(newEnemy)
+        newEnemy.chase()
+
+
     },
 
     createPowerUp(posX) {
@@ -151,13 +164,30 @@ const BeatemApp = {
 
     //simple melee hit, actor A hits actor B, optionally we can add parameters which decide where the hit occurs.
     tryHit(actorA, dmg, radius) {
-        //if actorA is player and actorB is enemy:
-        this.enemies.forEach(enemy => {
-            if (this.checkForCollision(actorA, enemy, radius)) {
-                enemy.receiveDmg(dmg)
-            }
-        })
-        //if actorA is enemy and actorB is player:
+
+        if (actorA.constructor.name == "Player") {
+
+            this.enemies.forEach(enemy => {
+                if (this.checkForCollision(actorA, enemy, radius)) {
+                    enemy.receiveDmg(dmg)
+                    if (enemy.characterLive <= 0) {
+                        this.killEnemy(enemy)
+                    }
+                }
+            })
+        }
+
+        if (actorA.constructor.name == "Enemy") {
+
+            this.players.forEach(player => {
+                if (this.checkForCollision(actorA, player, radius)) {
+                    player.receiveDmg(dmg)
+                    if (player.characterLive <= 0) {
+                        this.killPlayer(player)
+                    }
+                }
+            })
+        }
 
     },
 
@@ -180,12 +210,18 @@ const BeatemApp = {
     //golpea a B, por si tiene un arma de melee. Ademas habria que establecer la convencion de A ataca a B siempre.
     checkForCollision(actorA, actorB, radius) {
         let distance = 0
+        distance = this.actorsDistance(actorA, actorB)
+        if (distance < radius) return true
+        else return false
+    },
+
+    actorsDistance(actorA, actorB) {
+        let distance = 0
         const a = actorA.actorPos.x - actorB.actorPos.x
         const b = actorA.actorPos.y - actorB.actorPos.y
         const c = actorA.actorPos.z - actorB.actorPos.z
         distance = Math.sqrt(a * a + b * b + c * c)
-        if (distance < radius) return true
-        else return false
+        return distance
     },
 
     //convendria que comprobase no solo el player 1 sino un compendio de todos
@@ -212,6 +248,27 @@ const BeatemApp = {
             }
         }
         else this.backgroundSpeed.x = 0
+    },
+
+
+    killEnemy(enemy) {
+        this.enemies.splice(this.enemies.indexOf(enemy), 1)
+    },
+
+    killPlayer(player) {
+        this.players.splice(this.players.indexOf(player), 1)
+    },
+
+    findNearestPlayer(actor1) {
+        let minDistance = 1000000
+        let nearestPlayer = null
+        this.players.forEach((player) => {
+            if (this.actorsDistance(actor1, player) < minDistance) {
+                minDistance = this.actorsDistance(actor1, player)
+                nearestPlayer = player
+            }
+        })
+        return nearestPlayer
     }
 
 }

@@ -21,7 +21,7 @@ class Actor {
     }
 
     getDrawPosY() {
-        return this.app.gameSize.h - this.actorSize.h - (this.actorPos.y + this.actorPos.z / 3)
+        return this.app.gameSize.h - this.actorSize.h - (this.actorPos.y + this.actorPos.z * 3)
     }
 
     draw() {
@@ -41,6 +41,7 @@ class Actor {
     setPosition() {
         this.actorPos.x += this.actorVel.x
         this.actorPos.y += this.actorVel.y
+        this.actorPos.z += this.actorVel.z
     }
 
     tryStopFall() {
@@ -58,7 +59,6 @@ class Actor {
     }
 
     move() {
-
         this.setMoveVelocity()
         this.updateGravity()
         this.setPosition()

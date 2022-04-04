@@ -7,6 +7,7 @@ class Character extends Actor {
         this.characterJumpForce = 12
         this.rectangleColor = "blue"
         this.characterLive = 100
+        this.characterDmg = 50
 
         //temporal
         this.weaponLevel = 0
@@ -50,13 +51,15 @@ class Character extends Actor {
     attack() {
 
         if (this.weaponLevel === 0) {
-            let dmg = 50
             let radius = 40
-            this.app.tryHit(this, dmg, radius)
+            this.app.tryHit(this, this.characterDmg, radius)
         }
-        for (let i = 0; i < this.weaponLevel; i++) {
-            this.app.shotBullet(this.actorPos.x, this.actorPos.y + i * 20, 0, 15, 15)
+        else {
+            for (let i = 0; i < this.weaponLevel; i++) {
+                this.app.shotBullet(this.actorPos.x, this.actorPos.y + i * 20, 0, 15, 15)
+            }
         }
+
     }
 
     receiveDmg(dmg) {
