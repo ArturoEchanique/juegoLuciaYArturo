@@ -22,8 +22,22 @@ class Enemy extends Character {
 
     chase() {
         this.state = "chase"
+        this.chasedPlayer = this.app.findNearestPlayer(this)
     }
 
+
+    setAttackBehaviour() {
+        switch (this.state) {
+            case "idle":
+                break
+            case "chase":
+                if (this.app.frames % 100 == 0 && this.app.actorsDistance(this, this.chasedPlayer) < 100) {
+                    this.attack()
+                }
+                // this.actorVel = chasedPlayer.actorPos - this.actorPos
+                break
+        }
+    }
 
     setMoveVelocity() {
         switch (this.state) {
@@ -32,17 +46,23 @@ class Enemy extends Character {
             case "idle":
                 break
             case "chase":
-                let chasedPlayer = this.app.findNearestPlayer(this)
-                this.actorVel.x = (chasedPlayer.actorPos.x - this.actorPos.x) * 0.02 * this.characterSpeed
-                this.actorVel.y = (chasedPlayer.actorPos.y - this.actorPos.y) * 0.02 * this.characterSpeed
-                this.actorVel.z = (chasedPlayer.actorPos.z - this.actorPos.z) * 0.02 * this.characterSpeed
-                // this.actorVel = chasedPlayer.actorPos - this.actorPos
-                if (this.app.frames % 100) {
-                    this.attack()
-                    break
-                }
 
+                this.actorVel.x = (this.chasedPlayer.actorPos.x - this.actorPos.x) * 0.02 * this.characterSpeed
+                this.actorVel.y = (this.chasedPlayer.actorPos.y - this.actorPos.y) * 0.02 * this.characterSpeed
+                this.actorVel.z = (this.chasedPlayer.actorPos.z - this.actorPos.z) * 0.02 * this.characterSpeed
+                // this.actorVel = chasedPlayer.actorPos - this.actorPos
+                break
         }
+    }
+
+    draw() {
+        // this.ctx.drawImage(this.imageInstance, this.ballPos.x, this.ballPos.y, this.ballSize.w, this.ballSize.h)
+        // adjusts the speed according to the arrow keys being pressed
+        // this.setMoveVelocity()
+        this.move()
+        this.setAttackBehaviour()
+        this.app.ctx.fillStyle = this.rectangleColor
+        this.app.ctx.fillRect(this.getDrawPosX(), this.getDrawPosY(), this.actorSize.w, this.actorSize.h)
     }
 
 

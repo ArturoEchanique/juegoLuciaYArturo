@@ -165,7 +165,7 @@ const BeatemApp = {
     //simple melee hit, actor A hits actor B, optionally we can add parameters which decide where the hit occurs.
     tryHit(actorA, dmg, radius) {
 
-        if (actorA.constructor.name == "Player") {
+        if (actorA instanceof Player) {
 
             this.enemies.forEach(enemy => {
                 if (this.checkForCollision(actorA, enemy, radius)) {
@@ -177,7 +177,8 @@ const BeatemApp = {
             })
         }
 
-        if (actorA.constructor.name == "Enemy") {
+        console.log("proviene de clase enemigo", actorA instanceof Enemy)
+        if (actorA instanceof Enemy) {
 
             this.players.forEach(player => {
                 if (this.checkForCollision(actorA, player, radius)) {
