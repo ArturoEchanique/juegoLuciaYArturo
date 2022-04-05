@@ -3,25 +3,24 @@ class Character extends Actor {
     constructor(app, posX, posY, posZ, width, height) {
         super(app, posX, posY, posZ, width, height)
 
-        this.characterSpeed = 5
+        this.characterSpeed = 7
         this.characterJumpForce = 12
         this.rectangleColor = "blue"
         this.characterLive = 100
         this.characterDmg = 50
         this.isAlive = true
 
+        this.frameIndex = 0
+
         //temporal
         this.weaponLevel = 0
-
-        this.imageInstance = undefined
-
-        this.init()
+        // this.init()
     }
 
-    init() {
-        // this.imageInstance = new Image()
-        // this.imageInstance.src = 'img/ball.png'
-    }
+    // init() {
+    //     this.image.instance = new Image()
+    //     this.imageInstance.src = "./images/enemies/player.png"
+    // }
 
     // draw() {
     //     // this.ctx.drawImage(this.imageInstance, this.ballPos.x, this.ballPos.y, this.ballSize.w, this.ballSize.h)
@@ -74,6 +73,15 @@ class Character extends Actor {
     die() {
         this.isAlive = false
         // de momento aqui
-        this.app.updateScreenCompleted()
     }
+
+    animate(framesCounter) {
+        if (framesCounter % 5 == 0) {
+            this.image.frameIndex++;
+        }
+        if (this.image.frameIndex >= this.image.totalFrames) {
+            this.image.frameIndex = 0
+        }
+    }
+
 }

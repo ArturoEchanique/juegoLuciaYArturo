@@ -21,8 +21,8 @@ class Background {
         this.move()
         this.app.ctx.drawImage(
             this.image,
-            this.app.screenProgress / this.app.screenSizeMultipler,
-            0,
+            this.app.bgPosition.x / this.app.screenSizeMultipler,
+            this.app.bgPosition.y / this.app.screenSizeMultipler,
             302,
             224,
             0,

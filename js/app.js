@@ -8,12 +8,15 @@ const BeatemApp = {
     ctx: undefined,
     fps: 60,
     screenSizeMultipler: 4,
+    //distancia total del eje Z
+    gameZdepth: 300,
     //% of screen that players have already completed
-    screenProgress: 0,
-    screenCompleted: 0,
-    screenEnd: 2688,
-    level: "0",
-    backgroundSpeed: { x: 0, y: 0 },
+    bgPosition: { x: 0, y: 60 },
+    bgBounds: {
+        x: 1664 * 4, y: 256 * 4
+    },
+    level: "2",
+    bgSpeed: { x: 0, y: 0 },
     gameSize: { w: undefined, h: undefined },
     frames: 0,
     player1Keys: { jump: " ", top: "ArrowUp", right: "ArrowRight", down: "ArrowDown", left: "ArrowLeft", attack: "b" },
@@ -24,15 +27,19 @@ const BeatemApp = {
     enemies: [],
     powerUps: [],
 
-    init(canvasID) {
+    initGame(canvasID) {
         this.canvasNode = document.querySelector(`#${canvasID}`)
         this.ctx = this.canvasNode.getContext('2d')
         this.setDimensions()
-        this.createAll()
-        this.players[0].setEventHandlers()
-        // this.setEventHandlers()
-        // this.setEventHandlers2()
-        this.start()
+
+
+        // this.startLevel1()
+        this.startMinigame1()
+
+    },
+
+    initLevel1() {
+        this.createLevel1()
     },
 
     setDimensions() {
@@ -46,19 +53,35 @@ const BeatemApp = {
 
 
     // TICK -----------------------------------------
-    start() {
+    startLevel1() {
 
+        this.createLevel1()
+        this.players[0].setEventHandlers()
         setInterval(() => {
-            // console.log("screen completed:", this.screenCompleted)
-            // console.log("screen progress: ", this.screenProgress)
-            // console.log(this.enemies.length)
             this.clearAll()
             this.collectGarbage()
-            this.drawAll()
+            this.drawLevel1()
             this.manageFrames()
+            this.drawFrame()
             this.checkBulletsCollisions()
             this.checkPowerUpCollisions()
-            if (this.frames % 500 == 0) this.trySpawnEnemies()
+            this.readLevelData()
+
+            // if (this.frames % 300 == 20) this.createEnemy()
+        }, 1000 / this.fps)
+    },
+
+    startMinigame1() {
+
+        this.createMinigame1()
+        this.players[0].setEventHandlers()
+        setInterval(() => {
+            this.clearAll()
+            this.collectGarbage()
+            this.drawMinigame1()
+            this.manageFrames()
+            this.drawFrame()
+            this.readLevelData()
 
             // if (this.frames % 300 == 20) this.createEnemy()
         }, 1000 / this.fps)
@@ -66,38 +89,65 @@ const BeatemApp = {
 
     //TICK -------------------------------------------
 
-    createAll() {
+    createLevel1() {
+
         this.createPlayer()
         this.createBackground()
         this.createPowerUp(900)
         this.createPowerUp(1000)
-
     },
 
-    trySpawnEnemies() {
-        if (this.screenCompleted < this.screenProgress && this.enemies.length == 0) {
-            this.createEnemies()
+    createMinigame1() {
+
+        this.createPlayer()
+        for (let i = 0; i < this.players.length; i++) {
+            this.players[i].actorPos.x = 200 * i + 200
+            this.players[i].actorPos.z = 100
         }
+        for (let i = 0; i < 4; i++) {
+            if (this.players[i]) {
+
+            }
+            else this.createEnemy(minigame1.enemies[i])
+        }
+        this.createBackground()
+    },
+
+    drawFrame() {
+        this.ctx.fillStyle = "red"
+        this.ctx.strokeRect(0, 0, this.gameSize.w, this.gameSize.h)
+    },
+
+    readLevelData() {
+        //esta primera condicion quedara antiguada cuando queramos spawnear cosas distintas a enemigos como armas o peatones
+        if (this.enemies.length == 0) {
+            for (let i = 0; i < level1.length; i++) {
+                if (!level1[i].spawned && level1[i].location <= this.bgPosition.x) {
+                    level1[i].spawned = true
+                    this.createEnemies(level1[i].enemies)
+                    this.enemies.forEach(enemie => enemie.chase())
+                }
+            }
+        }
+
+
     },
 
     createPlayer() {
-        this.players.push(new Player(this, 100, 0, 0, 50, 50, this.player1Keys))
+        this.players.push(new Player(this, 200, 0, 15, 100, 100, this.player1Keys))
     },
 
-    createEnemies() {
-        let newEnemy = new Enemy1(this, this.screenProgress + 500, 0, 0, 50, 50)
-        this.enemies.push(newEnemy)
-        newEnemy.chase()
+    createEnemies(enemies) {
 
-        newEnemy = new Enemy2(this, this.screenProgress + 500, 0, 0, 50, 50)
-        this.enemies.push(newEnemy)
-        newEnemy.chase()
+        enemies.forEach(enemy => this.createEnemy(enemy))
+        // enemiesStr.forEach(enemyStr => {
+        //     this.enemies.push(eval(`new ${enemyStr}(this, this.bgPosition.x + 1200, 0, Math.random() * 500 -300, 50, 50)`))
+        // })
+    },
 
-        newEnemy = new Enemy3(this, this.screenProgress + 500, 0, 0, 50, 50)
-        this.enemies.push(newEnemy)
-        newEnemy.chase()
+    createEnemy(enemy) {
 
-
+        this.enemies.push(eval(`new ${enemy.class}(this, ${enemy.location.x}, ${enemy.location.y}, ${enemy.location.z}, 100,100)`))
     },
 
     createPowerUp(posX) {
@@ -115,13 +165,26 @@ const BeatemApp = {
         this.background = new Background(this, this.gameSize.w, this.gameSize.h, "./images/bgSimpsons.png")
     },
 
-    drawAll() {
-        this.updateBackgroundSpeed()
+    drawLevel1() {
+        this.updateBgSpeed()
         this.background.draw()
         this.players.forEach(player => player.draw())
         this.drawBullets()
         this.drawEnemies()
         this.drawPowerUps()
+    },
+
+    drawLevel2() {
+
+        this.players.forEach(player => player.draw())
+        this.createEnemies(level1[i].enemies)
+
+
+    },
+
+    drawMinigame1() {
+        this.players.forEach(player => player.draw())
+        this.drawEnemies()
     },
 
     drawBullets() {
@@ -150,15 +213,6 @@ const BeatemApp = {
         this.enemies = this.enemies.filter(enemy => enemy.isAlive)
         // comprueba si no hay enemigos, y en ese caso, permite avanzar al jugador
     },
-
-    updateScreenCompleted() {
-        console.log("checking for update screen")
-        if (this.enemies.length == 0) {
-            console.log("updating screen completed!!!!!!!!!!!!!")
-            this.screenCompleted = this.screenProgress
-        }
-    },
-
 
 
     clearAll() {
@@ -259,31 +313,56 @@ const BeatemApp = {
     },
 
     //convendria que comprobase no solo el player 1 sino un compendio de todos
-    updateBackgroundSpeed() {
+    updateBgSpeed() {
 
+        /// eje X
         if (this.enemies.length > 0) {
-            this.backgroundSpeed.x = 0
+            this.bgSpeed.x = 0
         }
-        else if (this.players[0].getDrawPosX() >= this.gameSize.w * 0.8 && this.screenProgress < this.screenEnd - 5) {
+        else if (this.players[0].getDrawPosX() >= this.gameSize.w * 0.575 && this.bgPosition.x < this.bgBounds.x - this.bgBounds.y * 1.45) {
             if (this.players[0].actorVel.x > 0) {
-                this.backgroundSpeed.x = this.players[0].actorVel.x
-                this.screenProgress += this.backgroundSpeed.x
+                this.bgSpeed.x = this.players[0].actorVel.x
+                this.bgPosition.x += this.bgSpeed.x
             }
             else {
-                this.backgroundSpeed.x = 0
+                this.bgSpeed.x = 0
             }
 
         }
-        else if (this.players[0].getDrawPosX() <= this.gameSize.w * 0.2 && this.screenProgress > 6) {
+        else if (this.players[0].getDrawPosX() <= this.gameSize.w * 0.2 && this.bgPosition.x > 6) {
             if (this.players[0].actorVel.x < 0) {
-                this.backgroundSpeed.x = this.players[0].actorVel.x
-                this.screenProgress += this.backgroundSpeed.x
+                this.bgSpeed.x = this.players[0].actorVel.x
+                this.bgPosition.x += this.bgSpeed.x
             }
             else {
-                this.backgroundSpeed.x = 0
+                this.bgSpeed.x = 0
             }
         }
-        else this.backgroundSpeed.x = 0
+        else this.bgSpeed.x = 0
+
+        /// eje Z Aqui uso directamente la coordenada Z porque es mas simple
+
+
+        if (this.players[0].actorPos.z >= 80 && this.bgPosition.y > 4) {
+            if (this.players[0].actorVel.z > 0) {
+                this.bgSpeed.y = this.players[0].actorVel.z * -1
+                this.bgPosition.y += this.bgSpeed.y
+            }
+            else {
+                this.bgSpeed.y = 0
+            }
+
+        }
+        if (this.players[0].actorPos.z <= 65 && this.bgPosition.y < 128) {
+            if (this.players[0].actorVel.z < 0) {
+                this.bgSpeed.y = this.players[0].actorVel.z * -1
+                this.bgPosition.y += this.bgSpeed.y
+            }
+            else {
+                this.bgSpeed.y = 0
+            }
+        }
+        else this.bgSpeed.y = 0
     },
 
     killPlayer(player) {
@@ -300,6 +379,9 @@ const BeatemApp = {
             }
         })
         return nearestPlayer
-    }
+    },
 
+    //////////////// NIVEL 2
 }
+
+

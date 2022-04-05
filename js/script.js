@@ -1,1 +1,1 @@
-BeatemApp.init('myCanvas')
+BeatemApp.initGame('myCanvas')

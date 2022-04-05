@@ -4,7 +4,6 @@ class Bullet extends Actor {
         super(app, posX, posY, posZ, width, height)
         this.bulletRadius = this.actorSize.w;
         this.dmg = 25
-        this.init()
     }
 
     init() {

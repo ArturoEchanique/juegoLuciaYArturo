@@ -10,12 +10,12 @@ class Player extends Character {
         //temporal
 
 
-        this.init()
+        // this.init()
     }
 
-    init() {
+    // init() {
 
-    }
+    // }
 
     setMoveVelocity() {
 
@@ -25,9 +25,13 @@ class Player extends Character {
         else this.actorVel.x = 0
 
         //Z AXIS
-        if (this.dirKeysPressed.top && !this.dirKeysPressed.down) this.actorVel.z = 1
-        else if ((this.dirKeysPressed.down && !this.dirKeysPressed.top)) this.actorVel.z = -1
+        if (this.dirKeysPressed.top && !this.dirKeysPressed.down) this.actorVel.z = 1 * this.characterSpeed
+        else if ((this.dirKeysPressed.down && !this.dirKeysPressed.top)) this.actorVel.z = -1 * this.characterSpeed
         else this.actorVel.z = 0
+    }
+
+    blowBalloon() {
+        console.log("hinchando globo")
     }
 
 
@@ -37,6 +41,7 @@ class Player extends Character {
             const { key } = event
             switch (key) {
                 case this.keys.right:
+                    if (this.app.level.indexOf("minigame") != -1) this.blowBalloon()
                     this.dirKeysPressed.right = true
                     break
                 case this.keys.left:
@@ -46,13 +51,14 @@ class Player extends Character {
                     this.dirKeysPressed.top = true
                     break
                 case this.keys.down:
+                    if (this.app.level.indexOf("minigame") != -1) this.blowBalloon()
                     this.dirKeysPressed.down = true
                     break
                 case this.keys.jump:
-                    this.jump()
+                    if (this.app.level.indexOf("minigame") == -1) this.jump()
                     break
                 case this.keys.attack:
-                    this.attack()
+                    if (this.app.level.indexOf("minigame") == -1) this.attack()
                     break
             }
         })
