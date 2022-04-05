@@ -9,6 +9,7 @@ class Character extends Actor {
         this.characterLive = 100
         this.characterDmg = 50
         this.isAlive = true
+        this.actorHead = undefined
 
         this.frameIndex = 0
 
@@ -82,6 +83,10 @@ class Character extends Actor {
         if (this.image.frameIndex >= this.image.totalFrames) {
             this.image.frameIndex = 0
         }
+    }
+
+    blowBalloon() {
+        this.actorHead.blow()
     }
 
 }

@@ -15,17 +15,24 @@ const BeatemApp = {
     bgBounds: {
         x: 1664 * 4, y: 256 * 4
     },
-    level: "2",
+    level: "character",
     bgSpeed: { x: 0, y: 0 },
     gameSize: { w: undefined, h: undefined },
     frames: 0,
-    player1Keys: { jump: " ", top: "ArrowUp", right: "ArrowRight", down: "ArrowDown", left: "ArrowLeft", attack: "b" },
+    playerKeys: [{ jump: " ", top: "ArrowUp", right: "ArrowRight", down: "ArrowDown", left: "ArrowLeft", attack: "b" },
+    { jump: "e", top: "w", right: "d", down: "s", left: "a", attack: "f" },
+    { jump: " ", top: "ArrowUp", right: "ArrowRight", down: "ArrowDown", left: "ArrowLeft", attack: "b" },
+    { jump: " ", top: "ArrowUp", right: "ArrowRight", down: "ArrowDown", left: "ArrowLeft", attack: "b" },
+    ],
+    // player1Keys: { jump: " ", top: "ArrowUp", right: "ArrowRight", down: "ArrowDown", left: "ArrowLeft", attack: "b" },
 
     background: undefined,
     players: [],
     bullets: [],
     enemies: [],
+    heads: [],
     powerUps: [],
+    characterSelEntries: [],
 
     initGame(canvasID) {
         this.canvasNode = document.querySelector(`#${canvasID}`)
@@ -34,7 +41,8 @@ const BeatemApp = {
 
 
         // this.startLevel1()
-        this.startMinigame1()
+        // this.startMinigame1()
+        this.startCharacterSel()
 
     },
 
@@ -81,13 +89,44 @@ const BeatemApp = {
             this.drawMinigame1()
             this.manageFrames()
             this.drawFrame()
-            this.readLevelData()
+
+            // if (this.frames % 300 == 20) this.createEnemy()
+        }, 1000 / this.fps)
+    },
+
+    startCharacterSel() {
+
+        this.createPlayer()
+        this.createPlayer()
+
+
+        this.createCharacterSel()
+        this.players[0].setEventHandlers()
+        setInterval(() => {
+            this.clearAll()
+            this.collectGarbage()
+            this.drawCharacterSel()
+            this.manageFrames()
+            this.drawFrame()
 
             // if (this.frames % 300 == 20) this.createEnemy()
         }, 1000 / this.fps)
     },
 
     //TICK -------------------------------------------
+
+    createCharacterSel() {
+
+        this.characterSelEntries.push(new CharacterEntry(this, 200, 200, 200, 300, 300))
+        this.players[0].characterSelEntry = this.characterSelEntries[0]
+        this.characterSelEntries.push(new CharacterEntry(this, 400, 200, 200, 300, 300))
+        this.players[1].characterSelEntry = this.characterSelEntries[1]
+        this.characterSelEntries.push(new CharacterEntry(this, 600, 200, 200, 300, 300))
+        this.characterSelEntries.push(new CharacterEntry(this, 800, 200, 200, 300, 300))
+
+
+
+    },
 
     createLevel1() {
 
@@ -103,14 +142,58 @@ const BeatemApp = {
         for (let i = 0; i < this.players.length; i++) {
             this.players[i].actorPos.x = 200 * i + 200
             this.players[i].actorPos.z = 100
+            this.players[i].actorHead = this.createHead(minigame1.heads[i])
         }
         for (let i = 0; i < 4; i++) {
             if (this.players[i]) {
 
             }
-            else this.createEnemy(minigame1.enemies[i])
+            else {
+                let newEnemy = this.createEnemy(minigame1.enemies[i])
+                newEnemy.actorHead = this.createHead(minigame1.heads[i])
+
+
+            }
         }
+        // for (let i = 0; i < 4; i++) {
+        //     this.createHead(minigame1.heads[i])
+        // }
         this.createBackground()
+    },
+
+    drawCharacterSel() {
+        this.ctx.fillStyle = "purple"
+        this.ctx.fillRect(0, 0, this.gameSize.w, this.gameSize.h)
+        this.ctx.fillStyle = "red"
+        this.ctx.fillRect(00, 100, 300, 700)
+        this.ctx.fillStyle = "green"
+        this.ctx.fillRect(300, 100, 300, 700)
+        this.ctx.fillStyle = "yellow"
+        this.ctx.fillRect(600, 100, 300, 700)
+        this.ctx.fillStyle = "black"
+        this.ctx.fillRect(900, 100, 300, 700)
+        this.characterSelEntries.forEach(entry => entry.draw())
+    },
+
+    drawLevel1() {
+        this.updateBgSpeed()
+        this.background.draw()
+        this.players.forEach(player => player.draw())
+        this.drawBullets()
+        this.drawEnemies()
+        this.drawPowerUps()
+    },
+
+    drawLevel2() {
+
+        this.players.forEach(player => player.draw())
+        this.createEnemies(level1[i].enemies)
+    },
+
+    drawMinigame1() {
+        this.players.forEach(player => player.draw())
+        this.heads.forEach(head => head.draw())
+        this.drawEnemies()
     },
 
     drawFrame() {
@@ -134,7 +217,7 @@ const BeatemApp = {
     },
 
     createPlayer() {
-        this.players.push(new Player(this, 200, 0, 15, 100, 100, this.player1Keys))
+        this.players.push(new Player(this, 200, 0, 15, 100, 100, this.playerKeys[this.players.length]))
     },
 
     createEnemies(enemies) {
@@ -147,7 +230,16 @@ const BeatemApp = {
 
     createEnemy(enemy) {
 
-        this.enemies.push(eval(`new ${enemy.class}(this, ${enemy.location.x}, ${enemy.location.y}, ${enemy.location.z}, 100,100)`))
+        let enemyCreated = eval(`new ${enemy.class}(this, ${enemy.location.x}, ${enemy.location.y}, ${enemy.location.z}, 100,100)`)
+        this.enemies.push(enemyCreated)
+        return enemyCreated
+    },
+
+    createHead(head) {
+
+        let headRef = eval(`new ${head.class}(this, ${head.location.x}, ${head.location.y}, ${head.location.z}, 100,100)`)
+        this.heads.push(headRef)
+        return headRef
     },
 
     createPowerUp(posX) {
@@ -165,27 +257,7 @@ const BeatemApp = {
         this.background = new Background(this, this.gameSize.w, this.gameSize.h, "./images/bgSimpsons.png")
     },
 
-    drawLevel1() {
-        this.updateBgSpeed()
-        this.background.draw()
-        this.players.forEach(player => player.draw())
-        this.drawBullets()
-        this.drawEnemies()
-        this.drawPowerUps()
-    },
 
-    drawLevel2() {
-
-        this.players.forEach(player => player.draw())
-        this.createEnemies(level1[i].enemies)
-
-
-    },
-
-    drawMinigame1() {
-        this.players.forEach(player => player.draw())
-        this.drawEnemies()
-    },
 
     drawBullets() {
 

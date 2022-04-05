@@ -8,7 +8,7 @@ class Actor {
         this.rectangleColor = "black"
         this.actorPos = { x: posX, y: posY, z: posZ }
         this.actorIsFalling = false
-        this.image = { instance: undefined, frameIndex: 1, totalFrames: 3, source: "" }
+        this.image = { instance: undefined, frameIndex: 1, totalFrames: 3, source: "./images/enemies/player.png" }
         this.actorVel = { x: 0, y: 0, z: 0 }
         this.actorPhysics = { gravity: .5 }
         this.init()
@@ -17,7 +17,7 @@ class Actor {
 
     init() {
         this.image.instance = new Image()
-        this.image.instance.src = "./images/enemies/player.png"
+        this.image.instance.src = this.image.source
     }
 
     //draw position in 2D space
@@ -35,6 +35,7 @@ class Actor {
 
         // adjusts the speed according to the arrow keys being pressed
         // this.setMoveVelocity()
+        this.tick()
         this.app.ctx.drawImage(
             this.image.instance,
             this.image.frameIndex * (this.image.instance.width / this.image.totalFrames),
@@ -105,5 +106,9 @@ class Actor {
         if (this.image.frameIndex >= this.image.totalFrames) {
             this.image.frameIndex = 0;
         }
+    }
+
+    tick() {
+
     }
 }

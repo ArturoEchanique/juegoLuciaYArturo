@@ -55,7 +55,25 @@ var level1 = [
 ]
 
 var minigame1 = {
-    nombre: "globos",
+    nombre: "balloon",
+    heads: [
+        {
+            class: "Head",
+            location: { x: 200, y: 0, z: 300 },
+        },
+        {
+            class: "Head",
+            location: { x: 400, y: 0, z: 300 },
+        },
+        {
+            class: "Head",
+            location: { x: 600, y: 0, z: 300 },
+        },
+        {
+            class: "Head",
+            location: { x: 800, y: 0, z: 300 },
+        }
+    ],
     enemies: [
         {
             class: "Enemy1",
@@ -77,3 +95,23 @@ var minigame1 = {
     completed: false,
     spawned: false,
 }
+
+var characterSelData = [
+    {
+        character: "Homer",
+        source: "./images/characterSel/mario.png"
+    },
+    {
+        character: "Marge",
+        source: "./images/characterSel/wario.png"
+    },
+    {
+        character: "Lisa",
+        source: "./images/characterSel/peach.png"
+    },
+    {
+        character: "Bart",
+        source: "./images/characterSel/luigi.png"
+    },
+
+]

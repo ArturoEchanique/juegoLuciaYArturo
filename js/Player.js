@@ -6,6 +6,7 @@ class Player extends Character {
         this.characterLive = 200
         this.dirKeysPressed = { top: false, right: false, down: false, left: false }
         this.rectangleColor = "yellow"
+        this.characterSelEntry = undefined
 
         //temporal
 
@@ -20,19 +21,29 @@ class Player extends Character {
     setMoveVelocity() {
 
         //X AXIS
-        if (this.dirKeysPressed.right && !this.dirKeysPressed.left) this.actorVel.x = 1 * this.characterSpeed
-        else if ((this.dirKeysPressed.left && !this.dirKeysPressed.right)) this.actorVel.x = -1 * this.characterSpeed
-        else this.actorVel.x = 0
+        if (this.app.level.indexOf("minigame") != -1) {
+            this.actorVel.x = 0
+            this.actorVel.z = 0
+            this.actorVel.y = 0
 
-        //Z AXIS
-        if (this.dirKeysPressed.top && !this.dirKeysPressed.down) this.actorVel.z = 1 * this.characterSpeed
-        else if ((this.dirKeysPressed.down && !this.dirKeysPressed.top)) this.actorVel.z = -1 * this.characterSpeed
-        else this.actorVel.z = 0
+        }
+        else {
+            if (this.dirKeysPressed.right && !this.dirKeysPressed.left) this.actorVel.x = 1 * this.characterSpeed
+            else if ((this.dirKeysPressed.left && !this.dirKeysPressed.right)) this.actorVel.x = -1 * this.characterSpeed
+            else this.actorVel.x = 0
+
+            //Z AXIS
+            if (this.dirKeysPressed.top && !this.dirKeysPressed.down) this.actorVel.z = 1 * this.characterSpeed
+            else if ((this.dirKeysPressed.down && !this.dirKeysPressed.top)) this.actorVel.z = -1 * this.characterSpeed
+            else this.actorVel.z = 0
+        }
     }
 
-    blowBalloon() {
-        console.log("hinchando globo")
-    }
+
+
+    // blowBalloon() {
+    //     this.actorHead.blow()
+    // }
 
 
 
@@ -41,13 +52,15 @@ class Player extends Character {
             const { key } = event
             switch (key) {
                 case this.keys.right:
-                    if (this.app.level.indexOf("minigame") != -1) this.blowBalloon()
+                    if (this.app.level.indexOf("character") != -1) this.characterSelEntry.changeCharacter(1)
                     this.dirKeysPressed.right = true
                     break
                 case this.keys.left:
+                    if (this.app.level.indexOf("character") != -1) this.characterSelEntry.changeCharacter(-1)
                     this.dirKeysPressed.left = true
                     break
                 case this.keys.top:
+                    if (this.app.level.indexOf("minigame") != -1) this.blowBalloon()
                     this.dirKeysPressed.top = true
                     break
                 case this.keys.down:

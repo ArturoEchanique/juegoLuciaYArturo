@@ -13,8 +13,6 @@ class Enemy extends Character {
 
     init() {
         this.image.instance = new Image()
-        this.instance = new Image()
-        this.instance.src = "./images/bgSimpsons.png"
         this.image.instance.src = "./images/enemies/player.png"
     }
 
@@ -53,6 +51,19 @@ class Enemy extends Character {
                 // this.actorVel = chasedPlayer.actorPos - this.actorPos
                 break
         }
+    }
+
+    playBallonMinigame() {
+        if (this.app.frames % (Math.floor(Math.random() * 60)) == 0) {
+            this.blowBalloon()
+        }
+    }
+
+    tick() {
+        if (this.app.level.indexOf("minigame") != -1) {
+            this.playBallonMinigame()
+        }
+
     }
 
     // draw() {
