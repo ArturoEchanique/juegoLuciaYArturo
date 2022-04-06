@@ -7,6 +7,7 @@ const BeatemApp = {
     canvasNode: undefined,
     ctx: undefined,
     fps: 60,
+    currentInterval: 0,
     screenSizeMultipler: 4,
     //distancia total del eje Z
     gameZdepth: 300,
@@ -15,8 +16,7 @@ const BeatemApp = {
     bgBounds: {
         x: 1664 * 4, y: 256 * 4
     },
-    level: "",
-    levelType: "",
+    level: { name: "", type: "", index: 0 },
     bgSpeed: { x: 0, y: 0 },
     gameSize: { w: undefined, h: undefined },
     frames: 0,
@@ -46,9 +46,10 @@ const BeatemApp = {
 
 
         //this.startLevel1()
-        this.startMinigame1()
-        //this.startCharacterSel()
+        //this.startMinigame1()
+        this.launchNextLevel()
         //this.startTransition()
+        //this.startLevel(3)
 
     },
 
@@ -62,25 +63,56 @@ const BeatemApp = {
     },
 
     //entra un parametro opcional, que fuerza a cargar un nivel, si no, carga el próximo nivel
-    startLevel(level) {
-        const prefix = "start"
-        const methodName = levelsData[level].name
-        if (level) window[method_prefix + method_name](arg1, arg2)
-        //this.startLevel1()
-        this.startMinigame1()
-        //this.startCharacterSel()
-        //this.startTransition()
+    launchNextLevel() {
+
+        for (let i = 0; i < levelsData.length; i++) {
+            if (levelsData[i].started == false) {
+                this.launchLevel(i)
+                break
+            }
+        }
+
+
+
+
+
     },
+
+    launchLevel(index) {
+
+        clearInterval(this.currentInterval)
+        switch (index) {
+            case 0: console.log("intro")
+                break
+            case 1: this.startCharacterSel()
+                break
+            case 2: this.startTransition()
+                break
+            case 3: this.startLevel1()
+                break
+            case 4: console.log("transition2")
+                break
+            case 5: this.startMinigame1()
+                break
+        }
+        levelsData[index].started = true
+        this.level.name = levelsData[index].name
+        this.level.type = levelsData[index].type
+        this.level.index = index
+
+    },
+
+
 
 
     // TICK -----------------------------------------
     startLevel1() {
 
-        this.level = "level1"
-        this.levelType = "level"
+        // this.level.name = "level1"
+        // this.level.type = "level"
         this.createLevel1()
         this.players[0].setEventHandlers()
-        setInterval(() => {
+        this.currentInterval = setInterval(() => {
             this.clearAll()
             this.collectGarbage()
             this.drawLevel1()
@@ -96,11 +128,11 @@ const BeatemApp = {
 
     startMinigame1() {
 
-        this.level = "minigame1"
-        this.levelType = "minigame"
+        // this.level.name = "minigame1"
+        // this.level.type = "minigame"
         this.createMinigame1()
         this.players[0].setEventHandlers()
-        setInterval(() => {
+        this.currentInterval = setInterval(() => {
             this.clearAll()
             this.collectGarbage()
             this.drawMinigame1()
@@ -113,8 +145,9 @@ const BeatemApp = {
 
     startCharacterSel() {
 
-        this.level = "character"
-        this.levelType = "character"
+        // this.level.name = "character"
+        // this.level.type = "character"
+        // this.level.index = 0
         // this.createPlayer()
         // this.createPlayer()
 
@@ -122,7 +155,8 @@ const BeatemApp = {
         this.createCharacterSel()
         this.players[0].setEventHandlers()
         this.players[1].setEventHandlers()
-        setInterval(() => {
+        console.log(this.players.length)
+        this.currentInterval = setInterval(() => {
             this.clearAll()
             this.collectGarbage()
             this.drawCharacterSel()
@@ -135,11 +169,11 @@ const BeatemApp = {
 
     startTransition() {
 
-        this.level = "transition"
-        this.levelType = "transition"
+        // this.level.name = "transition"
+        // this.level.type = "transition"
 
         this.createTransition()
-        setInterval(() => {
+        this.currentInterval = setInterval(() => {
             this.clearAll()
             this.collectGarbage()
             this.drawTransition()
@@ -234,11 +268,12 @@ const BeatemApp = {
     readLevelData() {
         //esta primera condicion quedara antiguada cuando queramos spawnear cosas distintas a enemigos como armas o peatones
         if (this.enemies.length == 0) {
-            for (let i = 0; i < level1.length; i++) {
-                if (!level1[i].spawned && level1[i].location <= this.bgPosition.x) {
-                    level1[i].spawned = true
-                    this.createEnemies(level1[i].enemies)
-                    this.enemies.forEach(enemie => enemie.chase())
+            const levelContent = levelsData[this.level.index].content
+            for (let i = 0; i < levelContent.length; i++) {
+                if (!levelContent[i].spawned && levelContent[i].location <= this.bgPosition.x) {
+                    levelContent[i].spawned = true
+                    this.createEnemies(levelContent[i].enemies)
+                    this.enemies.forEach(enemy => enemy.chase())
                 }
             }
         }
@@ -247,7 +282,7 @@ const BeatemApp = {
     },
 
     createPlayer() {
-        this.players.push(new Player(this, 200, 0, 15, 100, 100, this.playerKeys[this.players.length], this.players.length))
+        this.players.push(new Player(this, 200, 0, 15, 200, 200, this.playerKeys[this.players.length], this.players.length))
     },
 
     createEnemies(enemies) {
@@ -260,7 +295,10 @@ const BeatemApp = {
 
     createEnemy(enemy) {
 
-        let enemyCreated = eval(`new ${enemy.class}(this, ${enemy.location.x}, ${enemy.location.y}, ${enemy.location.z}, 100,100)`)
+        let enemyCreated = undefined
+        const randomPos = this.randomPositionOutside()
+        if (enemy.location === undefined) enemyCreated = eval(`new ${enemy.class}(this, ${randomPos.x}, ${randomPos.y}, ${randomPos.z}, 100,100)`)
+        else enemyCreated = eval(`new ${enemy.class}(this, ${enemy.location.x}, ${enemy.location.y}, ${enemy.location.z}, 100,100)`)
         this.enemies.push(enemyCreated)
         return enemyCreated
     },
@@ -380,6 +418,17 @@ const BeatemApp = {
             character.die()
         }
     },
+
+    randomPositionOutside() {
+        randomPos = { x: 0, y: 0, z: 0 }
+        if (Math.random() < 0.5) randomPos.x = this.bgPosition.x + 1200
+        else randomPos.x = this.bgPosition.x - 200
+        randomPos.y = 0
+        randomPos.z = Math.random() * 500 - 300
+        return randomPos
+        // this.enemies.push(eval(`new ${enemyStr}(this, this.bgPosition.x + 1200, 0, Math.random() * 500 -300, 50, 50)`))
+    },
+
 
     //tambien hay que hacer que encuanto encuentre un objetivo que beneficie solo a ese y haga break, por lo que
     //el segundo foreach deberia ser un for clasico

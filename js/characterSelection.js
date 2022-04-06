@@ -92,7 +92,8 @@ class CharacterSelection {
             this.playersDone.two = true
         }
         if (this.playersDone.one && this.playersDone.two) {
-            console.log("lets play!")
+            console.log("launching next level!")
+            this.app.launchNextLevel()
         }
     }
 

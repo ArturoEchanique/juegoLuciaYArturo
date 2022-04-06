@@ -8,7 +8,7 @@ class Actor {
         this.rectangleColor = "black"
         this.actorPos = { x: posX, y: posY, z: posZ }
         this.actorIsFalling = false
-        this.image = { instance: undefined, frameIndex: 1, totalFrames: 3, source: "./images/enemies/player.png" }
+        this.image = { instance: undefined, frameIndex: 0, totalFrames: 3, source: "./images/enemies/player.png" }
         this.actorVel = { x: 0, y: 0, z: 0 }
         this.actorPhysics = { gravity: .5 }
         this.init()
@@ -38,7 +38,7 @@ class Actor {
         this.tick()
         this.app.ctx.drawImage(
             this.image.instance,
-            this.image.frameIndex * (this.image.instance.width / this.image.totalFrames),
+            (this.image.frameIndex) * (this.image.instance.width / this.image.totalFrames),
             0,
             this.image.instance.width / this.image.totalFrames,
             this.image.instance.height,
@@ -100,7 +100,7 @@ class Actor {
     }
 
     animate(framesCounter) {
-        if (framesCounter % 5 == 0) {
+        if (framesCounter % 10 == 0) {
             this.image.frameIndex++;
         }
         if (this.image.frameIndex >= this.image.totalFrames) {

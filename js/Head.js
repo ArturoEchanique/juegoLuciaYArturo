@@ -30,7 +30,7 @@ class Head extends Actor {
     }
 
     tick() {
-        if (this.app.level.indexOf("minigame") != -1) {
+        if (this.app.level.name.indexOf("minigame") != -1) {
             if (this.headSize >= this.headLimit) {
                 console.log("BOOOOOOOOOM")
                 // this.app.finishMinigame()

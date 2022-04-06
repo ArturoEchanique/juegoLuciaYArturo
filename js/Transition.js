@@ -93,6 +93,9 @@ class Transition {
         this.animateHand(this.app.frames)
         this.animateBunny(this.app.frames)
         this.bunnyImage.frameIndex2 += 2
+        if (this.bunnyImage.frameIndex2 >= 50) {
+            this.app.launchNextLevel()
+        }
     }
 
 

@@ -2,7 +2,7 @@ var levelsData = [
     {
         name: "intro",
         type: "intro",
-        started: false,
+        started: true,
         completed: false,
 
     },
@@ -31,16 +31,16 @@ var levelsData = [
                 enemies: [
                     {
                         class: "Enemy1",
-                        location: { x: 200, y: 0, z: 100 },
+                        location: undefined,
                     },
                     {
                         class: "Enemy1",
-                        location: { x: 200, y: 0, z: 100 },
+                        location: undefined,
                     },
                     {
                         class: "Enemy1",
-                        location: { x: 200, y: 0, z: 100 },
-                    }
+                        location: undefined,
+                    },
                 ],
                 completed: false,
                 spawned: false,
@@ -49,19 +49,82 @@ var levelsData = [
 
             {
                 name: "sector2",
-                location: 800,
+                location: 600,
                 enemies: [
                     {
                         class: "Enemy1",
-                        location: { x: 800, y: 0, z: 100 },
+                        location: undefined,
                     },
                     {
                         class: "Enemy1",
-                        location: { x: 800, y: 0, z: 100 },
+                        location: undefined,
                     },
                     {
                         class: "Enemy1",
-                        location: { x: 800, y: 0, z: 100 },
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy1",
+                        location: undefined,
+                    }
+                ],
+                completed: false,
+                spawned: false,
+
+            },
+            {
+                name: "sector3",
+                location: 1000,
+                enemies: [
+                    {
+                        class: "Enemy1",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy1",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy2",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy2",
+                        location: undefined,
+                    }
+                ],
+                completed: false,
+                spawned: false,
+
+            },
+
+            {
+                name: "boss",
+                location: 1000,
+                enemies: [
+                    {
+                        class: "Enemy1",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy1",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy2",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy2",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy2",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy3",
+                        location: undefined,
                     }
                 ],
                 completed: false,

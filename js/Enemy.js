@@ -42,12 +42,16 @@ class Enemy extends Character {
             case "idle":
                 break
             case "chase":
+                //harcoded
+                // this.chasedPlayer = this.app.players[0]
+                //hardcoded
                 const a = this.chasedPlayer.actorPos.x - this.actorPos.x
                 const c = this.chasedPlayer.actorPos.z - this.actorPos.z
                 const module = Math.sqrt(a * a + c * c)
                 //aun nose porque el chase parece ir mas rapido en el z que en el x, pero lo compenso aqui
                 this.actorVel.x = a * 1 * this.characterSpeed / module
                 this.actorVel.z = c * .8 * this.characterSpeed / module
+                console.log(this.actorVel)
                 // this.actorVel = chasedPlayer.actorPos - this.actorPos
                 break
         }
@@ -60,7 +64,7 @@ class Enemy extends Character {
     }
 
     tick() {
-        if (this.app.level.indexOf("minigame") != -1) {
+        if (this.app.level.name.indexOf("minigame") != -1) {
             this.playBallonMinigame()
         }
 

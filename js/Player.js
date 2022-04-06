@@ -15,14 +15,16 @@ class Player extends Character {
         // this.init()
     }
 
-    // init() {
-
-    // }
+    init() {
+        this.image = { instance: undefined, frameIndex: 0, totalFrames: 8, source: "./images/characters/homer/walk3.png" }
+        this.image.instance = new Image()
+        this.image.instance.src = this.image.source
+    }
 
     setMoveVelocity() {
 
         //X AXIS
-        if (this.app.level.indexOf("minigame") != -1) {
+        if (this.app.level.name.indexOf("minigame") != -1) {
             this.actorVel.x = 0
             this.actorVel.z = 0
             this.actorVel.y = 0
@@ -54,30 +56,32 @@ class Player extends Character {
             const { key } = event
             switch (key) {
                 case this.keys.right:
-                    if (this.app.levelType == "character") this.app.changeCharacter(1, this.playerIndex)
+
+                    if (this.app.level.type == "character") this.app.changeCharacter(1, this.playerIndex)
                     // this.characterSelEntry.changeCharacter(1)
                     this.dirKeysPressed.right = true
                     break
                 case this.keys.left:
-                    if (this.app.levelType == "character") this.app.changeCharacter(-1, this.playerIndex)
+                    if (this.app.level.type == "character") this.app.changeCharacter(-1, this.playerIndex)
                     // this.characterSelEntry.changeCharacter(-1)
                     this.dirKeysPressed.left = true
                     break
                 case this.keys.top:
-                    if (this.app.levelType == "minigame") this.blowBalloon()
+                    if (this.app.level.type == "minigame") this.blowBalloon()
                     this.dirKeysPressed.top = true
                     break
                 case this.keys.down:
-                    if (this.app.levelType == "minigame") this.blowBalloon()
+                    if (this.app.level.type == "minigame") this.blowBalloon()
                     this.dirKeysPressed.down = true
                     break
                 case this.keys.jump:
-                    if (this.app.levelType != "minigame") this.jump()
+                    if (this.app.level.type != "minigame") this.jump()
 
                     break
                 case this.keys.attack:
-                    if (this.app.levelType != "minigame") this.attack()
-                    if (this.app.levelType == "character") this.app.selectCharacter(this.playerIndex)
+                    console.log("ATTACK KEY")
+                    if (this.app.level.type != "minigame") this.attack()
+                    if (this.app.level.type == "character") this.app.selectCharacter(this.playerIndex)
                     break
             }
         })
