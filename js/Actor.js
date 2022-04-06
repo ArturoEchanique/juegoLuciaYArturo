@@ -8,7 +8,7 @@ class Actor {
         this.rectangleColor = "black"
         this.actorPos = { x: posX, y: posY, z: posZ }
         this.actorIsFalling = false
-        this.image = { instance: undefined, frameIndex: 0, totalFrames: 3, source: "./images/enemies/player.png" }
+        this.image = { instance: undefined, frameIndex: 0, totalFrames: 3, source: "./images/enemies/player.png", animTime: 10 }
         this.actorVel = { x: 0, y: 0, z: 0 }
         this.actorPhysics = { gravity: .5 }
         this.init()
@@ -35,7 +35,7 @@ class Actor {
 
         // adjusts the speed according to the arrow keys being pressed
         // this.setMoveVelocity()
-        this.tick()
+
         this.app.ctx.drawImage(
             this.image.instance,
             (this.image.frameIndex) * (this.image.instance.width / this.image.totalFrames),
@@ -48,6 +48,7 @@ class Actor {
             this.actorSize.h)
         this.animate(this.app.frames)
         this.move()
+        this.tick()
         // this.app.ctx.fillStyle = this.rectangleColor
         // this.app.ctx.fillRect(this.getDrawPosX(), this.getDrawPosY(), this.actorSize.w, this.actorSize.h)
     }
@@ -100,7 +101,7 @@ class Actor {
     }
 
     animate(framesCounter) {
-        if (framesCounter % 10 == 0) {
+        if (framesCounter % 5 == 0) {
             this.image.frameIndex++;
         }
         if (this.image.frameIndex >= this.image.totalFrames) {

@@ -23,7 +23,6 @@ class Head extends Actor {
     }
 
     shake() {
-        console.log("I am skaking")
     }
 
     animate(framesCounter) {

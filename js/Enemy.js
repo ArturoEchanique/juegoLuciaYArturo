@@ -24,6 +24,7 @@ class Enemy extends Character {
 
     setAttackBehaviour() {
         switch (this.state) {
+
             case "idle":
                 break
             case "chase":
@@ -51,7 +52,6 @@ class Enemy extends Character {
                 //aun nose porque el chase parece ir mas rapido en el z que en el x, pero lo compenso aqui
                 this.actorVel.x = a * 1 * this.characterSpeed / module
                 this.actorVel.z = c * .8 * this.characterSpeed / module
-                console.log(this.actorVel)
                 // this.actorVel = chasedPlayer.actorPos - this.actorPos
                 break
         }
@@ -63,10 +63,16 @@ class Enemy extends Character {
         }
     }
 
-    tick() {
-        if (this.app.level.name.indexOf("minigame") != -1) {
-            this.playBallonMinigame()
+    playSlapMinigame() {
+        if (this.app.frames % (Math.floor(Math.random() * 60)) == 0) {
+            this.slapHead()
         }
+    }
+
+    tick() {
+        if (this.app.level.name == "minigame1") this.playBallonMinigame()
+        else if (this.app.level.name == "minigame2") this.playSlapMinigame()
+        this.setAttackBehaviour()
 
     }
 
@@ -117,6 +123,7 @@ class Enemy3 extends Enemy {
 
     constructor(app, posX, posY, posZ, width, height) {
         super(app, posX, posY, posZ, width, height)
+        this.actorSize = { w: 300, h: 300 }
         this.enemySize = { w: width, h: height }
 
         this.rectangleColor = "black"

@@ -43,11 +43,15 @@ const BeatemApp = {
         this.setDimensions()
         this.createPlayer()
         this.createPlayer()
+        this.players[0].setEventHandlers()
+        this.players[1].setEventHandlers()
+
 
 
         //this.startLevel1()
-        //this.startMinigame1()
-        this.launchNextLevel()
+
+        // this.launchNextLevel()
+        this.launchLevel(9)
         //this.startTransition()
         //this.startLevel(3)
 
@@ -94,6 +98,9 @@ const BeatemApp = {
                 break
             case 5: this.startMinigame1()
                 break
+            //de momento
+            case 9: this.startMinigame2()
+                break
         }
         levelsData[index].started = true
         this.level.name = levelsData[index].name
@@ -111,7 +118,7 @@ const BeatemApp = {
         // this.level.name = "level1"
         // this.level.type = "level"
         this.createLevel1()
-        this.players[0].setEventHandlers()
+
         this.currentInterval = setInterval(() => {
             this.clearAll()
             this.collectGarbage()
@@ -131,11 +138,28 @@ const BeatemApp = {
         // this.level.name = "minigame1"
         // this.level.type = "minigame"
         this.createMinigame1()
-        this.players[0].setEventHandlers()
+
         this.currentInterval = setInterval(() => {
             this.clearAll()
             this.collectGarbage()
             this.drawMinigame1()
+            this.manageFrames()
+            this.drawFrame()
+
+            // if (this.frames % 300 == 20) this.createEnemy()
+        }, 1000 / this.fps)
+    },
+
+    startMinigame2() {
+
+        // this.level.name = "minigame1"
+        // this.level.type = "minigame"
+        this.createMinigame2()
+
+        this.currentInterval = setInterval(() => {
+            this.clearAll()
+            this.collectGarbage()
+            this.drawMinigame2()
             this.manageFrames()
             this.drawFrame()
 
@@ -153,8 +177,6 @@ const BeatemApp = {
 
 
         this.createCharacterSel()
-        this.players[0].setEventHandlers()
-        this.players[1].setEventHandlers()
         console.log(this.players.length)
         this.currentInterval = setInterval(() => {
             this.clearAll()
@@ -229,6 +251,31 @@ const BeatemApp = {
         this.createBackground()
     },
 
+    createMinigame2() {
+
+        // this.createPlayer()
+        for (let i = 0; i < this.players.length; i++) {
+            this.players[i].actorPos.x = 200 * i + 200
+            this.players[i].actorPos.z = 100
+            this.players[i].actorHead = this.createHead(minigame1.heads[i])
+            this.players[i].setSlapHand()
+        }
+        for (let i = 0; i < 4; i++) {
+            if (this.players[i]) {
+
+            }
+            else {
+                let newEnemy = this.createEnemy(minigame1.enemies[i])
+                newEnemy.actorHead = this.createHead(minigame1.heads[i])
+            }
+        }
+
+        // for (let i = 0; i < 4; i++) {
+        //     this.createHead(minigame1.heads[i])
+        // }
+        this.createBackground()
+    },
+
     drawCharacterSel() {
         this.characterSelection.draw()
     },
@@ -255,6 +302,12 @@ const BeatemApp = {
     },
 
     drawMinigame1() {
+        this.players.forEach(player => player.draw())
+        this.heads.forEach(head => head.draw())
+        this.drawEnemies()
+    },
+
+    drawMinigame2() {
         this.players.forEach(player => player.draw())
         this.heads.forEach(head => head.draw())
         this.drawEnemies()
@@ -393,7 +446,7 @@ const BeatemApp = {
             this.enemies.forEach(enemy => {
                 if (this.checkForCollision(actorA, enemy, radius)) {
                     enemy.receiveDmg(dmg)
-                    checkAlive(enemy)
+                    this.checkAlive(enemy)
                 }
             })
         }

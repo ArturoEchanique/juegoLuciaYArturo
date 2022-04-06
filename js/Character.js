@@ -50,6 +50,7 @@ class Character extends Actor {
     }
 
     attack() {
+        console.log("i am attacking")
 
         if (this.weaponLevel === 0) {
             let radius = 40
@@ -64,6 +65,7 @@ class Character extends Actor {
     }
 
     receiveDmg(dmg) {
+        console.log("AUCHHHH")
         this.characterLive -= dmg
 
         //solo para comprobar como recibe daño
@@ -76,17 +78,26 @@ class Character extends Actor {
         // de momento aqui
     }
 
-    animate(framesCounter) {
-        if (framesCounter % 5 == 0) {
-            this.image.frameIndex++;
-        }
-        if (this.image.frameIndex >= this.image.totalFrames) {
-            this.image.frameIndex = 0
-        }
-    }
+    // animate(framesCounter) {
+    //     if (framesCounter % this.image.animTime == 0) {
+    //         this.image.frameIndex++;
+    //     }
+    //     if (this.image.frameIndex >= this.image.totalFrames) {
+    //         this.image.frameIndex = 0
+    //     }
+    // }
 
     blowBalloon() {
         this.actorHead.blow()
+    }
+
+    handSlapAnim() {
+    }
+
+    slapHead() {
+        this.actorHead.shake()
+        this.handSlapAnim()
+
     }
 
 }

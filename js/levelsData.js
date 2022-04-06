@@ -30,7 +30,7 @@ var levelsData = [
                 location: 200,
                 enemies: [
                     {
-                        class: "Enemy1",
+                        class: "Enemy3",
                         location: undefined,
                     },
                     {
@@ -100,7 +100,7 @@ var levelsData = [
 
             {
                 name: "boss",
-                location: 1000,
+                location: 2000,
                 enemies: [
                     {
                         class: "Enemy1",
