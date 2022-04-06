@@ -15,7 +15,8 @@ const BeatemApp = {
     bgBounds: {
         x: 1664 * 4, y: 256 * 4
     },
-    level: "character",
+    level: "",
+    levelType: "",
     bgSpeed: { x: 0, y: 0 },
     gameSize: { w: undefined, h: undefined },
     frames: 0,
@@ -27,27 +28,28 @@ const BeatemApp = {
     // player1Keys: { jump: " ", top: "ArrowUp", right: "ArrowRight", down: "ArrowDown", left: "ArrowLeft", attack: "b" },
 
     background: undefined,
+    characterSelection: undefined,
     players: [],
     bullets: [],
     enemies: [],
     heads: [],
     powerUps: [],
     characterSelEntries: [],
+    transition: undefined,
 
     initGame(canvasID) {
         this.canvasNode = document.querySelector(`#${canvasID}`)
         this.ctx = this.canvasNode.getContext('2d')
         this.setDimensions()
+        this.createPlayer()
+        this.createPlayer()
 
 
-        // this.startLevel1()
-        // this.startMinigame1()
-        this.startCharacterSel()
+        //this.startLevel1()
+        this.startMinigame1()
+        //this.startCharacterSel()
+        //this.startTransition()
 
-    },
-
-    initLevel1() {
-        this.createLevel1()
     },
 
     setDimensions() {
@@ -59,10 +61,23 @@ const BeatemApp = {
         this.canvasNode.setAttribute('height', this.gameSize.h)
     },
 
+    //entra un parametro opcional, que fuerza a cargar un nivel, si no, carga el próximo nivel
+    startLevel(level) {
+        const prefix = "start"
+        const methodName = levelsData[level].name
+        if (level) window[method_prefix + method_name](arg1, arg2)
+        //this.startLevel1()
+        this.startMinigame1()
+        //this.startCharacterSel()
+        //this.startTransition()
+    },
+
 
     // TICK -----------------------------------------
     startLevel1() {
 
+        this.level = "level1"
+        this.levelType = "level"
         this.createLevel1()
         this.players[0].setEventHandlers()
         setInterval(() => {
@@ -81,6 +96,8 @@ const BeatemApp = {
 
     startMinigame1() {
 
+        this.level = "minigame1"
+        this.levelType = "minigame"
         this.createMinigame1()
         this.players[0].setEventHandlers()
         setInterval(() => {
@@ -96,12 +113,15 @@ const BeatemApp = {
 
     startCharacterSel() {
 
-        this.createPlayer()
-        this.createPlayer()
+        this.level = "character"
+        this.levelType = "character"
+        // this.createPlayer()
+        // this.createPlayer()
 
 
         this.createCharacterSel()
         this.players[0].setEventHandlers()
+        this.players[1].setEventHandlers()
         setInterval(() => {
             this.clearAll()
             this.collectGarbage()
@@ -113,24 +133,38 @@ const BeatemApp = {
         }, 1000 / this.fps)
     },
 
+    startTransition() {
+
+        this.level = "transition"
+        this.levelType = "transition"
+
+        this.createTransition()
+        setInterval(() => {
+            this.clearAll()
+            this.collectGarbage()
+            this.drawTransition()
+            this.manageFrames()
+            this.drawFrame()
+
+            // if (this.frames % 300 == 20) this.createEnemy()
+        }, 1000 / this.fps)
+    },
+
     //TICK -------------------------------------------
 
     createCharacterSel() {
 
-        this.characterSelEntries.push(new CharacterEntry(this, 200, 200, 200, 300, 300))
-        this.players[0].characterSelEntry = this.characterSelEntries[0]
-        this.characterSelEntries.push(new CharacterEntry(this, 400, 200, 200, 300, 300))
-        this.players[1].characterSelEntry = this.characterSelEntries[1]
-        this.characterSelEntries.push(new CharacterEntry(this, 600, 200, 200, 300, 300))
-        this.characterSelEntries.push(new CharacterEntry(this, 800, 200, 200, 300, 300))
+        this.characterSelection = new CharacterSelection(this)
+    },
 
+    createTransition() {
 
-
+        this.transition = new Transition(this)
     },
 
     createLevel1() {
 
-        this.createPlayer()
+        // this.createPlayer()
         this.createBackground()
         this.createPowerUp(900)
         this.createPowerUp(1000)
@@ -138,7 +172,7 @@ const BeatemApp = {
 
     createMinigame1() {
 
-        this.createPlayer()
+        // this.createPlayer()
         for (let i = 0; i < this.players.length; i++) {
             this.players[i].actorPos.x = 200 * i + 200
             this.players[i].actorPos.z = 100
@@ -162,17 +196,13 @@ const BeatemApp = {
     },
 
     drawCharacterSel() {
-        this.ctx.fillStyle = "purple"
-        this.ctx.fillRect(0, 0, this.gameSize.w, this.gameSize.h)
-        this.ctx.fillStyle = "red"
-        this.ctx.fillRect(00, 100, 300, 700)
-        this.ctx.fillStyle = "green"
-        this.ctx.fillRect(300, 100, 300, 700)
-        this.ctx.fillStyle = "yellow"
-        this.ctx.fillRect(600, 100, 300, 700)
-        this.ctx.fillStyle = "black"
-        this.ctx.fillRect(900, 100, 300, 700)
-        this.characterSelEntries.forEach(entry => entry.draw())
+        this.characterSelection.draw()
+    },
+
+    drawTransition() {
+
+        this.transition.draw()
+        // this.characterSelEntries.forEach(entry => entry.draw())
     },
 
     drawLevel1() {
@@ -217,7 +247,7 @@ const BeatemApp = {
     },
 
     createPlayer() {
-        this.players.push(new Player(this, 200, 0, 15, 100, 100, this.playerKeys[this.players.length]))
+        this.players.push(new Player(this, 200, 0, 15, 100, 100, this.playerKeys[this.players.length], this.players.length))
     },
 
     createEnemies(enemies) {
@@ -254,7 +284,7 @@ const BeatemApp = {
     },
 
     createBackground() {
-        this.background = new Background(this, this.gameSize.w, this.gameSize.h, "./images/bgSimpsons.png")
+        this.background = new Background(this, this.gameSize.w, this.gameSize.h, "./images/bgSimpsons1.png")
     },
 
 
@@ -380,7 +410,7 @@ const BeatemApp = {
         const a = actorA.actorPos.x - actorB.actorPos.x
         const b = actorA.actorPos.y - actorB.actorPos.y
         const c = actorA.actorPos.z - actorB.actorPos.z
-        distance = Math.sqrt(a * a + b * b + c * c)
+        distance = Math.sqrt(Math.abs(a * a + b * b + c * c))
         return distance
     },
 
@@ -452,6 +482,21 @@ const BeatemApp = {
         })
         return nearestPlayer
     },
+
+    changeCharacter(direction, playerIndex) {
+        this.characterSelection.moveHand(direction, playerIndex)
+    },
+
+    selectCharacter(playerIndex) {
+
+        this.characterSelection.selectCharacter(playerIndex)
+        let hand = undefined
+        if (playerIndex == 0) hand = this.characterSelection.hand1Position
+        else hand = this.characterSelection.hand2Position
+        this.players[playerIndex].playerCharacter = characterSelData.characters[hand].character
+        console.log(this.players[playerIndex].playerCharacter)
+        // console.log(this.players[playerIndex].playerCharacter)
+    }
 
     //////////////// NIVEL 2
 }

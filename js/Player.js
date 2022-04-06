@@ -1,12 +1,13 @@
 class Player extends Character {
 
-    constructor(app, posX, posY, posZ, width, height, keys) {
+    constructor(app, posX, posY, posZ, width, height, keys, playerIndex) {
         super(app, posX, posY, posZ, width, height)
         this.keys = keys
         this.characterLive = 200
+        this.playerIndex = playerIndex
+        this.playerCharacter = "Homer"
         this.dirKeysPressed = { top: false, right: false, down: false, left: false }
         this.rectangleColor = "yellow"
-        this.characterSelEntry = undefined
 
         //temporal
 
@@ -48,30 +49,35 @@ class Player extends Character {
 
 
     setEventHandlers() {
+        console.log("setting events")
         document.addEventListener('keydown', event => {
             const { key } = event
             switch (key) {
                 case this.keys.right:
-                    if (this.app.level.indexOf("character") != -1) this.characterSelEntry.changeCharacter(1)
+                    if (this.app.levelType == "character") this.app.changeCharacter(1, this.playerIndex)
+                    // this.characterSelEntry.changeCharacter(1)
                     this.dirKeysPressed.right = true
                     break
                 case this.keys.left:
-                    if (this.app.level.indexOf("character") != -1) this.characterSelEntry.changeCharacter(-1)
+                    if (this.app.levelType == "character") this.app.changeCharacter(-1, this.playerIndex)
+                    // this.characterSelEntry.changeCharacter(-1)
                     this.dirKeysPressed.left = true
                     break
                 case this.keys.top:
-                    if (this.app.level.indexOf("minigame") != -1) this.blowBalloon()
+                    if (this.app.levelType == "minigame") this.blowBalloon()
                     this.dirKeysPressed.top = true
                     break
                 case this.keys.down:
-                    if (this.app.level.indexOf("minigame") != -1) this.blowBalloon()
+                    if (this.app.levelType == "minigame") this.blowBalloon()
                     this.dirKeysPressed.down = true
                     break
                 case this.keys.jump:
-                    if (this.app.level.indexOf("minigame") == -1) this.jump()
+                    if (this.app.levelType != "minigame") this.jump()
+
                     break
                 case this.keys.attack:
-                    if (this.app.level.indexOf("minigame") == -1) this.attack()
+                    if (this.app.levelType != "minigame") this.attack()
+                    if (this.app.levelType == "character") this.app.selectCharacter(this.playerIndex)
                     break
             }
         })

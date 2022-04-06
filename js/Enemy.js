@@ -8,7 +8,6 @@ class Enemy extends Character {
         this.characterDmg = 60
         this.chasedPlayer = null
         this.state = "idle"
-        this.instance = undefined
     }
 
     init() {
@@ -19,6 +18,7 @@ class Enemy extends Character {
     chase() {
         this.state = "chase"
         this.chasedPlayer = this.app.findNearestPlayer(this)
+        console.log("chasing")
     }
 
 
