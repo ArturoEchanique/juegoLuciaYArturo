@@ -14,6 +14,7 @@ const BeatemApp = {
     //pre to avoid flickering
     introImagePre: { instance: undefined, frame: 7, totalFrames: 300 },
     introImage: { instance: undefined, frame: 7, totalFrames: 300 },
+    minigameBg: { instance: undefined, source: "./images/misc/miniBg1.png" },
 
 
     screenSizeMultipler: 4,
@@ -51,12 +52,13 @@ const BeatemApp = {
         this.ctx = this.canvasNode.getContext('2d')
         this.setDimensions()
         this.createPlayer()
-        this.drawBlackScreen()
+
 
         this.audio = new Audio
         this.gameOver.instance = new Image()
         this.gameOver.instance.src = this.gameOver.source
-        // this.launchLevel(2)
+        // this.drawBlackScreen()
+        this.launchLevel(5)
 
 
     },
@@ -302,9 +304,11 @@ const BeatemApp = {
 
     createMinigame1() {
 
+        this.minigameBg.instance = new Image()
+        this.minigameBg.instance.src = this.minigameBg.source
         // this.createPlayer()
         for (let i = 0; i < this.players.length; i++) {
-            this.players[i].actorPos.x = 200 * i + 200
+            this.players[i].actorPos.x = 267 * i + 150
             this.players[i].actorPos.z = 100
             this.players[i].actorHead = this.createHead(minigame1.heads[i])
         }
@@ -408,12 +412,14 @@ const BeatemApp = {
     },
 
     drawMinigame1() {
+        this.ctx.drawImage(this.minigameBg.instance, 0, 0, this.gameSize.w, this.gameSize.h)
         this.players.forEach(player => player.draw())
         this.heads.forEach(head => head.draw())
         this.drawEnemies()
     },
 
     drawMinigame2() {
+        this.ctx.drawImage(this.miniBg.instance, 0, 0, this.gameSize.w, this.gameSize.h)
         this.players.forEach(player => player.draw())
         this.heads.forEach(head => head.draw())
         this.drawEnemies()
@@ -705,6 +711,7 @@ const BeatemApp = {
         if (playerIndex == 0) hand = this.characterSelection.hand1Position
         else hand = this.characterSelection.hand2Position
         this.players[playerIndex].playerCharacter = characterSelData.characters[hand].character
+        this.players[playerIndex].updateHudMini()
         // console.log(this.players[playerIndex].playerCharacter)
     },
 

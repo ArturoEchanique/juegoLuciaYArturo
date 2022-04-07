@@ -219,37 +219,37 @@ var minigame1 = {
     heads: [
         {
             class: "Head",
-            location: { x: 200, y: 0, z: 300 },
+            location: { x: 150, y: 0, z: 300 },
         },
         {
             class: "Head",
-            location: { x: 400, y: 0, z: 300 },
+            location: { x: 417, y: 0, z: 300 },
         },
         {
             class: "Head",
-            location: { x: 600, y: 0, z: 300 },
+            location: { x: 684, y: 0, z: 300 },
         },
         {
             class: "Head",
-            location: { x: 800, y: 0, z: 300 },
+            location: { x: 950, y: 0, z: 300 },
         }
     ],
     enemies: [
         {
             class: "Enemy1",
-            location: { x: 200, y: 0, z: 100 },
+            location: { x: 150, y: 0, z: 100 },
         },
         {
             class: "Enemy1",
-            location: { x: 400, y: 0, z: 100 },
+            location: { x: 417, y: 0, z: 100 },
         },
         {
             class: "Enemy1",
-            location: { x: 600, y: 0, z: 100 },
+            location: { x: 684, y: 0, z: 100 },
         },
         {
             class: "Enemy1",
-            location: { x: 800, y: 0, z: 100 },
+            location: { x: 950, y: 0, z: 100 },
         }
     ],
     completed: false,
@@ -262,22 +262,22 @@ var characterSelData = {
     handImage2: "./images/characterSel/handB2.png",
     characters: [
         {
-            character: "Marge",
+            character: "marge",
             source1: "./images/characterSel/marge1.png",
             source2: "./images/characterSel/marge2.png"
         },
         {
-            character: "Homer",
+            character: "homer",
             source1: "./images/characterSel/homer1.png",
             source2: "./images/characterSel/homer2.png"
         },
         {
-            character: "Bart",
+            character: "bart",
             source1: "./images/characterSel/bart1.png",
             source2: "./images/characterSel/bart2.png",
         },
         {
-            character: "Lisa",
+            character: "lisa",
             source1: "./images/characterSel/lisa1.png",
             source2: "./images/characterSel/lisa2.png",
         },

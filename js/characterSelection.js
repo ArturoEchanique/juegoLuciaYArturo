@@ -72,12 +72,14 @@ class CharacterSelection {
     }
 
     moveHand(direction, playerIndex) {
+        console.log("moving hand")
         if (playerIndex == 0 && this.playersDone.one == false) {
             if ((this.hand1Position + direction + 4) % 4 == this.hand2Position) {
                 direction *= 2
-                console.log("SHIIIIIIIT")
+
             }
             this.hand1Position = (this.hand1Position + direction + 4) % 4
+            console.log(this.hand1Position)
         }
         else if (playerIndex == 1 && this.playersDone.two == false) {
             if ((this.hand2Position + direction + 4) % 4 == this.hand1Position) direction *= 2
@@ -85,7 +87,6 @@ class CharacterSelection {
 
 
         }
-        console.log(this.hand2Position)
     }
 
 

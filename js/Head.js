@@ -11,7 +11,7 @@ class Head extends Actor {
 
 
     init() {
-        this.image.source = "./images/marioHead.png"
+        this.image.source = "./images/minigame/homerHead.png"
         this.image.instance = new Image()
         this.image.instance.src = this.image.source
     }

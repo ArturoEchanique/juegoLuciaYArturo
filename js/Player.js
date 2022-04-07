@@ -5,9 +5,10 @@ class Player extends Character {
         this.keys = keys
         this.characterLive = 200
         this.hudImage = undefined
+        this.hudMini = undefined
         // this.playerLives = 2
         this.playerIndex = playerIndex
-        this.playerCharacter = "Homer"
+        this.playerCharacter = "homer"
         this.dirKeysPressed = { top: false, right: false, down: false, left: false }
         this.rectangleColor = "yellow"
 
@@ -26,6 +27,14 @@ class Player extends Character {
         this.hudImage = { instance: undefined, source: "./images/misc/hud.png" }
         this.hudImage.instance = new Image()
         this.hudImage.instance.src = this.hudImage.source
+
+        this.hudMini = { instance: undefined, source: "" }
+        this.hudMini.instance = new Image()
+        this.hudMini.instance.src = this.hudMini.source
+    }
+
+    updateHudMini() {
+        this.hudMini.instance.src = "./Images//hudMini/" + this.playerCharacter + ".png"
     }
 
     setMoveVelocity() {
@@ -123,16 +132,19 @@ class Player extends Character {
         })
     }
 
-    drawLife() {
-        this.app.ctx.drawImage(this.hudImage.instance, 0, 0, this.app.gameSize.w / 4 * (this.playerIndex + 1), 100)
+    drawHud() {
 
+        //hud background
+        this.app.ctx.drawImage(this.hudImage.instance, (this.app.gameSize.w / 4) * (this.playerIndex), 0, this.app.gameSize.w / 4, 100)
+        this.app.ctx.drawImage(this.hudMini.instance, (this.app.gameSize.w / 4) * (this.playerIndex), 0, 100, 100)
         //life
+        // this.app.ctx.fillStyle = "white"
+        // this.app.ctx.font = '60px serif'
+        // this.app.ctx.fillText("P" + (this.playerIndex + 1), (235 * (this.playerIndex + 1)) - 210, 68
+        // )
         this.app.ctx.fillStyle = "white"
-        this.app.ctx.font = '60px serif'
-        this.app.ctx.fillText("P" + (this.playerIndex + 1), (235 * (this.playerIndex + 1)) - 210, 68
-        )
         this.app.ctx.font = '40px serif'
-        this.app.ctx.fillText(this.characterLive, 235 * (this.playerIndex + 1), 70)
+        this.app.ctx.fillText(this.characterLive, 235 + (this.app.gameSize.w / 4) * (this.playerIndex), 73)
 
         //lives
         // this.app.ctx.font = '50px serif'
@@ -140,7 +152,7 @@ class Player extends Character {
     }
 
     tick() {
-        this.drawLife()
+        if (this.app.level.type == "level") this.drawHud()
     }
 
     setSlapHand() {
