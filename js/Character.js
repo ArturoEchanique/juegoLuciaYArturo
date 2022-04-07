@@ -50,7 +50,6 @@ class Character extends Actor {
     }
 
     attack() {
-        console.log("i am attacking")
 
         if (this.weaponLevel === 0) {
             let radius = 40
@@ -65,7 +64,7 @@ class Character extends Actor {
     }
 
     receiveDmg(dmg) {
-        console.log("AUCHHHH")
+
         this.characterLive -= dmg
 
         //solo para comprobar como recibe daño

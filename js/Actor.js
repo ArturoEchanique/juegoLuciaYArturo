@@ -8,6 +8,7 @@ class Actor {
         this.rectangleColor = "black"
         this.actorPos = { x: posX, y: posY, z: posZ }
         this.actorIsFalling = false
+        this.delay = { started: false, frame: 0 }
         this.image = { instance: undefined, frameIndex: 0, totalFrames: 3, source: "./images/enemies/player.png", animTime: 10 }
         this.actorVel = { x: 0, y: 0, z: 0 }
         this.actorPhysics = { gravity: .5 }

@@ -4,6 +4,7 @@ class Player extends Character {
         super(app, posX, posY, posZ, width, height)
         this.keys = keys
         this.characterLive = 200
+        this.hudImage = undefined
         // this.playerLives = 2
         this.playerIndex = playerIndex
         this.playerCharacter = "Homer"
@@ -13,13 +14,18 @@ class Player extends Character {
         //temporal
 
 
-        // this.init()
+        this.init()
     }
 
     init() {
         this.image = { instance: undefined, frameIndex: 0, totalFrames: 8, source: "./images/characters/homer/walk4.png" }
+
         this.image.instance = new Image()
         this.image.instance.src = this.image.source
+
+        this.hudImage = { instance: undefined, source: "./images/misc/hud.png" }
+        this.hudImage.instance = new Image()
+        this.hudImage.instance.src = this.hudImage.source
     }
 
     setMoveVelocity() {
@@ -80,12 +86,20 @@ class Player extends Character {
                     break
                 case this.keys.jump:
                     if (this.app.level.type != "minigame") this.jump()
-
                     break
                 case this.keys.attack:
-                    console.log("ATTACK KEY")
                     if (this.app.level.type != "minigame") this.attack()
                     if (this.app.level.type == "character") this.app.selectCharacter(this.playerIndex)
+                    break
+                case "Enter":
+                    if (this.app.level.type == "") this.app.launchNextLevel()
+                    //retun to character sel
+                    else if (this.app.gameOver.enabled) {
+                        this.app.returnToCharacterSel()
+                    }
+                    else if (this.app.level.type == "character" && this.app.players.length < 2) this.app.addPlayer2()
+                    else if (this.app.level.type == "intro") this.app.launchNextLevel()
+                    console.log("ENTER PRESSED")
                     break
             }
         })
@@ -110,12 +124,15 @@ class Player extends Character {
     }
 
     drawLife() {
-        this.app.ctx.fillStyle = this.rectangleColor
-        this.app.ctx.fillRect(200 * (this.playerIndex + 1), 0, 50, 50)
+        this.app.ctx.drawImage(this.hudImage.instance, 0, 0, this.app.gameSize.w / 4 * (this.playerIndex + 1), 100)
+
         //life
         this.app.ctx.fillStyle = "white"
-        this.app.ctx.font = '50px serif'
-        this.app.ctx.fillText(this.characterLive, 200 * (this.playerIndex + 1), 50, 100)
+        this.app.ctx.font = '60px serif'
+        this.app.ctx.fillText("P" + (this.playerIndex + 1), (235 * (this.playerIndex + 1)) - 210, 68
+        )
+        this.app.ctx.font = '40px serif'
+        this.app.ctx.fillText(this.characterLive, 235 * (this.playerIndex + 1), 70)
 
         //lives
         // this.app.ctx.font = '50px serif'

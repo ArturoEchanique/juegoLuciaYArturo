@@ -5,6 +5,7 @@ class CharacterSelection {
         this.handPositions = [125, 405, 683, 965]
         this.hand1Position = 0
         this.hand2Position = 1
+        this.delay = { started: false, frame: 0, seconds: 0, callback: undefined }
         this.playersDone = { one: false, two: false }
         this.bgImage = { instance: undefined, source: "./images/enemies/player.png" }
         this.pImages = [{ instance: undefined, source: "./images/enemies/player.png" },
@@ -13,10 +14,6 @@ class CharacterSelection {
         { instance: undefined, source: "./images/enemies/player.png" },
 
         ]
-        // this.pImage1 = { instance: undefined, source: "./images/enemies/player.png" }
-        // this.pImage2 = { instance: undefined, source: "./images/enemies/player.png" }
-        // this.pImage3 = { instance: undefined, source: "./images/enemies/player.png" }
-        // this.pImage4 = { instance: undefined, source: "./images/enemies/player.png" }
 
         this.handImage1 = { instance: undefined, source: "./images/enemies/player.png" }
         this.handImage2 = { instance: undefined, source: "./images/enemies/player.png" }
@@ -25,6 +22,7 @@ class CharacterSelection {
     }
 
     init() {
+        this.hand2Position = -1
         this.bgImage.instance = new Image()
         this.bgImage.instance.src = characterSelData.bgImage
 
@@ -44,8 +42,11 @@ class CharacterSelection {
     }
 
     draw() {
+        // console.log(this.hand1Position)
+        // console.log(this.hand2Position)
 
         this.tick()
+        // this.execDelay()
         this.app.ctx.drawImage(this.bgImage.instance, 0, 0, this.app.gameSize.w, this.app.gameSize.h)
 
         if (this.hand1Position == 0 || this.hand2Position == 0) {
@@ -72,15 +73,38 @@ class CharacterSelection {
 
     moveHand(direction, playerIndex) {
         if (playerIndex == 0 && this.playersDone.one == false) {
-            if ((this.hand1Position + direction + 4) % 4 == this.hand2Position) direction *= 2
+            if ((this.hand1Position + direction + 4) % 4 == this.hand2Position) {
+                direction *= 2
+                console.log("SHIIIIIIIT")
+            }
             this.hand1Position = (this.hand1Position + direction + 4) % 4
         }
         else if (playerIndex == 1 && this.playersDone.two == false) {
             if ((this.hand2Position + direction + 4) % 4 == this.hand1Position) direction *= 2
             this.hand2Position = (this.hand2Position + direction + 4) % 4
 
+
         }
+        console.log(this.hand2Position)
     }
+
+
+    // execDelay() {
+    //     // if (this.app.frames >= this.delay.frame + this.delay.seconds * this.app.fps) {
+    //     //     this.delay.callback()
+    //     //     this.delay.started = false
+    //     //     console.log("delayed completed")
+
+    //     // }
+    // }
+    // startDelay(seconds, callback) {
+    //     this.delay.started = true
+    //     this.delay.frame = this.app.frames
+    //     callback()
+
+    // }
+
+
 
     selectCharacter(playerIndex) {
         if (playerIndex == 0) {
@@ -91,8 +115,11 @@ class CharacterSelection {
             this.pImages[this.hand2Position].instance.src = characterSelData.characters[this.hand2Position].source2
             this.playersDone.two = true
         }
+        if (this.app.players.length == 1 && this.playersDone.one) {
+            this.app.launchNextLevel()
+        }
+
         if (this.playersDone.one && this.playersDone.two) {
-            console.log("launching next level!")
             this.app.launchNextLevel()
         }
     }

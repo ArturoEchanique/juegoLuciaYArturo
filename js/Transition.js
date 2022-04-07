@@ -39,6 +39,12 @@ class Transition {
 
     draw() {
 
+
+        console.log("drawing")
+        this.app.ctx.fillStyle = "white"
+        this.app.ctx.font = '50px serif'
+        this.app.ctx.fillText(this.characterLive, 200 * (this.playerIndex + 1), 50, 100)
+
         this.app.ctx.fillStyle = "black"
         this.app.ctx.fillRect(0, 0, this.app.gameSize.w, this.app.gameSize.h)
 
@@ -69,6 +75,12 @@ class Transition {
             325,
             225)
 
+        //TEXT
+        this.app.ctx.fillStyle = "white"
+        this.app.ctx.font = '40px serif'
+        this.app.ctx.fillText(levelsData[this.app.level.index].content.stageNumber, this.app.gameSize.w / 2 - 70, 150)
+        this.app.ctx.fillText(levelsData[this.app.level.index].content.stageName, this.app.gameSize.w / 2 - 250, 250)
+
 
 
         // if (this.hand1Position == 0 || this.hand2Position == 0) {
@@ -93,7 +105,7 @@ class Transition {
         this.animateHand(this.app.frames)
         this.animateBunny(this.app.frames)
         this.bunnyImage.frameIndex2 += 2
-        if (this.bunnyImage.frameIndex2 >= 50) {
+        if (this.bunnyImage.frameIndex2 >= 300) {
             this.app.launchNextLevel()
         }
     }

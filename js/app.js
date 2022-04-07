@@ -8,7 +8,16 @@ const BeatemApp = {
     ctx: undefined,
     fps: 60,
     currentInterval: 0,
+
+    gameOver: { instance: undefined, source: "./images/misc/gameOver.png", transparency: 1, enabled: false },
+
+    //pre to avoid flickering
+    introImagePre: { instance: undefined, frame: 7, totalFrames: 300 },
+    introImage: { instance: undefined, frame: 7, totalFrames: 300 },
+
+
     screenSizeMultipler: 4,
+    videoContainer: undefined,
     //distancia total del eje Z
     gameZdepth: 300,
     //% of screen that players have already completed
@@ -17,6 +26,7 @@ const BeatemApp = {
         x: 1664 * 4, y: 256 * 4
     },
     level: { name: "", type: "", index: 0 },
+    audio: undefined,
     bgSpeed: { x: 0, y: 0 },
     gameSize: { w: undefined, h: undefined },
     frames: 0,
@@ -34,7 +44,6 @@ const BeatemApp = {
     enemies: [],
     heads: [],
     powerUps: [],
-    characterSelEntries: [],
     transition: undefined,
 
     initGame(canvasID) {
@@ -42,19 +51,25 @@ const BeatemApp = {
         this.ctx = this.canvasNode.getContext('2d')
         this.setDimensions()
         this.createPlayer()
+        this.drawBlackScreen()
+
+        this.audio = new Audio
+        this.gameOver.instance = new Image()
+        this.gameOver.instance.src = this.gameOver.source
+        // this.launchLevel(2)
+
+
+    },
+
+    drawBlackScreen() {
+        this.ctx.fillStyle = "black"
+        this.ctx.fillRect(0, 0, this.gameSize.w, this.gameSize.h)
+    },
+
+    addPlayer2() {
         this.createPlayer()
-        this.players[0].setEventHandlers()
-        this.players[1].setEventHandlers()
-
-
-
-        //this.startLevel1()
-
-        // this.launchNextLevel()
-        this.launchLevel(9)
-        //this.startTransition()
-        //this.startLevel(3)
-
+        this.characterSelection.hand2Position = 0
+        while (this.characterSelection.hand2Position == this.characterSelection.hand1Position) this.characterSelection.hand2Position++
     },
 
     setDimensions() {
@@ -86,7 +101,7 @@ const BeatemApp = {
 
         clearInterval(this.currentInterval)
         switch (index) {
-            case 0: console.log("intro")
+            case 0: this.startIntro()
                 break
             case 1: this.startCharacterSel()
                 break
@@ -106,6 +121,13 @@ const BeatemApp = {
         this.level.name = levelsData[index].name
         this.level.type = levelsData[index].type
         this.level.index = index
+        if (this.audio) {
+
+            this.audio.pause()
+            this.audio.src = levelsData[index].music
+            this.audio.play()
+        }
+
 
     },
 
@@ -177,7 +199,6 @@ const BeatemApp = {
 
 
         this.createCharacterSel()
-        console.log(this.players.length)
         this.currentInterval = setInterval(() => {
             this.clearAll()
             this.collectGarbage()
@@ -186,6 +207,19 @@ const BeatemApp = {
             this.drawFrame()
 
             // if (this.frames % 300 == 20) this.createEnemy()
+        }, 1000 / this.fps)
+    },
+
+    startIntro() {
+
+        this.createIntro()
+        this.currentInterval = setInterval(() => {
+            this.clearAll()
+            this.collectGarbage()
+            this.drawIntro()
+            this.manageFrames()
+            this.drawFrame()
+
         }, 1000 / this.fps)
     },
 
@@ -210,17 +244,57 @@ const BeatemApp = {
 
     createCharacterSel() {
 
+        // this.audio.pause()
+        // this.audio.src = "./music/coin.mp3"
+        // this.audio.play()
+        // this.audio = new Audio("./music/intro.mp3")
+        // this.audio.play()
         this.characterSelection = new CharacterSelection(this)
     },
 
+    createIntro() {
+
+
+        // this.audio = new Audio("./music/intro.mp3")
+        // this.audio.play()
+        this.introImagePre.instance = new Image()
+        // this.introImagePre.instance.src = this.getIntroImageSrc()
+        this.introImage.instance = new Image()
+        // this.introImage.instance.src = this.getIntroImageSrc()
+    },
+
+    getIntroImageSrc(frame) {
+        // "./images/intro/ezgif-frame-00" + this.introImage.frame + ".png"
+        let imageNumber = frame
+        let prefixSrc = "./images/intro/ezgif-frame-"
+        if (frame > 174) {
+            prefixSrc = "./images/intro2/ezgif-frame-"
+            imageNumber = frame - 167
+        }
+        if (frame > 360) {
+            prefixSrc = "./images/intro3/ezgif-frame-"
+            imageNumber = frame - 359
+        }
+        if (imageNumber < 10) imageNumber = "0" + imageNumber
+        if (imageNumber < 100) imageNumber = "0" + imageNumber
+        return prefixSrc + imageNumber + ".png"
+    },
+
+
     createTransition() {
 
+        // this.audio.pause()
+        // this.audio.src = "./music/transition.mp3"
+        // this.audio.play()
         this.transition = new Transition(this)
     },
 
     createLevel1() {
 
         // this.createPlayer()
+        // this.audio.pause()
+        // this.audio.src = "./music/level1.mp3"
+        // this.audio.play()
         this.createBackground()
         this.createPowerUp(900)
         this.createPowerUp(1000)
@@ -278,6 +352,36 @@ const BeatemApp = {
 
     drawCharacterSel() {
         this.characterSelection.draw()
+        console.log(this.enemies.length)
+    },
+
+    checkIntroFinished() {
+        if (this.introImage.frame >= 400) return true
+        else return false
+    },
+
+    drawIntro() {
+        if (this.checkIntroFinished()) this.launchNextLevel()
+        if ((this.frames + 5) % 7 == 0) {
+            this.introImagePre.frame++
+            this.introImagePre.instance.src = this.getIntroImageSrc(this.introImagePre.frame)
+        }
+        if (this.frames % 7 == 0) {
+            this.introImage.frame++
+            this.introImage.instance.src = this.getIntroImageSrc(this.introImage.frame)
+        }
+        this.ctx.drawImage(
+            this.introImagePre.instance,
+            0,
+            0,
+            this.gameSize.w,
+            this.gameSize.h)
+        this.ctx.drawImage(
+            this.introImage.instance,
+            0,
+            0,
+            this.gameSize.w,
+            this.gameSize.h)
     },
 
     drawTransition() {
@@ -287,12 +391,14 @@ const BeatemApp = {
     },
 
     drawLevel1() {
-        this.updateBgSpeed()
+        if (this.players.length > 0) this.updateBgSpeed()
+
         this.background.draw()
         this.players.forEach(player => player.draw())
         this.drawBullets()
         this.drawEnemies()
         this.drawPowerUps()
+        this.tryDrawGameOver()
     },
 
     drawLevel2() {
@@ -336,6 +442,8 @@ const BeatemApp = {
 
     createPlayer() {
         this.players.push(new Player(this, 200, 0, 15, 200, 200, this.playerKeys[this.players.length], this.players.length))
+        this.players[this.players.length - 1].setEventHandlers()
+        console.log("playercreated")
     },
 
     createEnemies(enemies) {
@@ -571,6 +679,7 @@ const BeatemApp = {
 
     killPlayer(player) {
         this.players.splice(this.players.indexOf(player), 1)
+        if (this.players.length == 0) this.showGameOver()
     },
 
     findNearestPlayer(actor1) {
@@ -596,10 +705,41 @@ const BeatemApp = {
         if (playerIndex == 0) hand = this.characterSelection.hand1Position
         else hand = this.characterSelection.hand2Position
         this.players[playerIndex].playerCharacter = characterSelData.characters[hand].character
-        console.log(this.players[playerIndex].playerCharacter)
         // console.log(this.players[playerIndex].playerCharacter)
-    }
+    },
 
+    showGameOver() {
+        this.gameOver.enabled = true
+    },
+
+    hideGameOver() {
+        this.gameOver.transparency = 0
+        this.gameOver.enabled = false
+    },
+
+    returnToCharacterSel() {
+        for (let i = 1; i < levelsData.length; i++) {
+            levelsData[i].started = false
+        }
+        this.hideGameOver()
+        this.createPlayer()
+        this.enemies = []
+        this.powerUps = []
+        this.bullets = []
+        this.heads = []
+        this.launchNextLevel()
+    },
+
+    tryDrawGameOver() {
+        if (this.gameOver.enabled) {
+            console.log("drawing gameover")
+            if (this.gameOver.transparency <= 1) this.gameOver.transparency += 0.001
+            // this.ctx.globalAlpha = this.gameOver.transparency
+            this.ctx.drawImage(this.gameOver.instance, 0, 0, this.gameSize.w, this.gameSize.h)
+            // this.ctx.globalAlpha = 1
+            console.log("gameover")
+        }
+    }
     //////////////// NIVEL 2
 }
 

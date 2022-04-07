@@ -127,7 +127,7 @@ class Enemy3 extends Enemy {
         this.enemySize = { w: width, h: height }
 
         this.rectangleColor = "black"
-        this.characterSpeed = .2
+        this.characterSpeed = 2
 
         this.characterLive = 200
 

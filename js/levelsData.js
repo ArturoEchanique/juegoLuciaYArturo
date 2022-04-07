@@ -2,26 +2,34 @@ var levelsData = [
     {
         name: "intro",
         type: "intro",
-        started: true,
+        music: "./music/intro.mp3",
+        started: false,
         completed: false,
 
     },
     {
         name: "characterSel",
         type: "character",
+        music: "./music/coin.mp3",
         started: false,
         completed: false,
     },
     {
         name: "transition1",
         type: "transition",
+        music: "./music/transition.mp3",
         started: false,
         completed: false,
+        content: {
+            stageNumber: "STAGE 1",
+            stageName: "DOWNTOWN SPRINGFIELD",
+        }
 
     },
     {
         name: "level1",
         type: "level",
+        music: "./music/level1.mp3",
         started: false,
         completed: false,
         content: [
@@ -137,13 +145,19 @@ var levelsData = [
     {
         name: "transition2",
         type: "transition",
+        music: "./music/transition.mp3",
         started: false,
         completed: false,
+        content: {
+            stageNumber: "STAGE 2",
+            stageName: "KRUSTYLAND",
+        }
 
     },
     {
         name: "minigame1",
         type: "minigame",
+        music: "./music/bonus1.mp3",
         started: false,
         completed: false,
 
@@ -151,6 +165,7 @@ var levelsData = [
     {
         name: "transition3",
         type: "transition",
+        music: "./music/intro.mp3",
         started: false,
         completed: false,
 
@@ -158,6 +173,7 @@ var levelsData = [
     {
         name: "level2",
         type: "level",
+        music: "./music/intro.mp3",
         started: false,
         completed: false,
 
@@ -165,6 +181,7 @@ var levelsData = [
     {
         name: "transition3",
         type: "transition",
+        music: "./music/intro.mp3",
         started: false,
         completed: false,
 
@@ -172,6 +189,7 @@ var levelsData = [
     {
         name: "minigame2",
         type: "minigame",
+        music: "./music/bonus1.mp3",
         started: false,
         completed: false,
 
@@ -179,6 +197,7 @@ var levelsData = [
     {
         name: "transition4",
         type: "transition",
+        music: "./music/intro.mp3",
         started: false,
         completed: false,
 
@@ -186,6 +205,7 @@ var levelsData = [
     {
         name: "level3",
         type: "level",
+        music: "./music/intro.mp3",
         started: false,
         completed: false,
 
@@ -193,51 +213,6 @@ var levelsData = [
 ]
 
 
-var level1 = [
-    {
-        location: 200,
-        name: "sector2",
-        enemies: [
-            {
-                class: "Enemy1",
-                location: { x: 200, y: 0, z: 100 },
-            },
-            {
-                class: "Enemy1",
-                location: { x: 200, y: 0, z: 100 },
-            },
-            {
-                class: "Enemy1",
-                location: { x: 200, y: 0, z: 100 },
-            }
-        ],
-        completed: false,
-        spawned: false,
-
-    },
-
-    {
-        location: 800,
-        name: "sector2",
-        enemies: [
-            {
-                class: "Enemy1",
-                location: { x: 800, y: 0, z: 100 },
-            },
-            {
-                class: "Enemy1",
-                location: { x: 800, y: 0, z: 100 },
-            },
-            {
-                class: "Enemy1",
-                location: { x: 800, y: 0, z: 100 },
-            }
-        ],
-        completed: false,
-        spawned: false,
-
-    },
-]
 
 var minigame1 = {
     nombre: "balloon",
