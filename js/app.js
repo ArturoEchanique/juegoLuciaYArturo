@@ -8,8 +8,11 @@ const BeatemApp = {
     ctx: undefined,
     fps: 60,
     currentInterval: 0,
+    gameLocked: false,
+    delay: { start: 0, end: 0 },
 
-    gameOver: { instance: undefined, source: "./images/misc/gameOver.png", transparency: 1, enabled: false },
+    gameOver: { instance: undefined, source: "./images/misc/gameOver.png", enabled: false },
+    gameCompleted: { instance: undefined, source: "./images/misc/completed.png", enabled: false },
 
     //pre to avoid flickering
     introImagePre: { instance: undefined, frame: 7, totalFrames: 300 },
@@ -17,6 +20,7 @@ const BeatemApp = {
     minigameBg: { instance: undefined, source: "./images/misc/miniBg1.png" },
 
 
+    player2alreadyAdded: false,
     screenSizeMultipler: 4,
     videoContainer: undefined,
     //distancia total del eje Z
@@ -28,10 +32,11 @@ const BeatemApp = {
     },
     level: { name: "", type: "", index: 0 },
     audio: undefined,
+    sfxAudio: undefined,
     bgSpeed: { x: 0, y: 0 },
     gameSize: { w: undefined, h: undefined },
     frames: 0,
-    playerKeys: [{ jump: " ", top: "ArrowUp", right: "ArrowRight", down: "ArrowDown", left: "ArrowLeft", attack: "b" },
+    playerKeys: [{ jump: " ", top: "ArrowUp", right: "ArrowRight", down: "ArrowDown", left: "ArrowLeft", attack: "m" },
     { jump: "e", top: "w", right: "d", down: "s", left: "a", attack: "f" },
     { jump: " ", top: "ArrowUp", right: "ArrowRight", down: "ArrowDown", left: "ArrowLeft", attack: "b" },
     { jump: " ", top: "ArrowUp", right: "ArrowRight", down: "ArrowDown", left: "ArrowLeft", attack: "b" },
@@ -52,13 +57,20 @@ const BeatemApp = {
         this.ctx = this.canvasNode.getContext('2d')
         this.setDimensions()
         this.createPlayer()
+        this.players[this.players.length - 1].setEventHandlers()
 
 
         this.audio = new Audio
         this.gameOver.instance = new Image()
         this.gameOver.instance.src = this.gameOver.source
-        // this.drawBlackScreen()
-        this.launchLevel(5)
+
+        this.gameCompleted.instance = new Image()
+        this.gameCompleted.instance.src = this.gameCompleted.source
+
+        this.sfxAudio = new Audio
+
+        this.drawBlackScreen()
+        // this.launchLevel(5)
 
 
     },
@@ -70,6 +82,11 @@ const BeatemApp = {
 
     addPlayer2() {
         this.createPlayer()
+        if (!this.player2alreadyAdded) {
+            this.players[this.players.length - 1].setEventHandlers()
+            this.player2alreadyAdded = true
+        }
+
         this.characterSelection.hand2Position = 0
         while (this.characterSelection.hand2Position == this.characterSelection.hand1Position) this.characterSelection.hand2Position++
     },
@@ -85,6 +102,8 @@ const BeatemApp = {
 
     //entra un parametro opcional, que fuerza a cargar un nivel, si no, carga el próximo nivel
     launchNextLevel() {
+        this.players.forEach(player => player.actorPos = { x: 0, y: 0, z: 0 })
+        this.bgPosition.x = 0
 
         for (let i = 0; i < levelsData.length; i++) {
             if (levelsData[i].started == false) {
@@ -100,6 +119,9 @@ const BeatemApp = {
     },
 
     launchLevel(index) {
+        this.level.name = levelsData[index].name
+        this.level.type = levelsData[index].type
+        this.level.index = index
 
         clearInterval(this.currentInterval)
         switch (index) {
@@ -111,18 +133,18 @@ const BeatemApp = {
                 break
             case 3: this.startLevel1()
                 break
-            case 4: console.log("transition2")
+            case 4: this.startTransition2()
                 break
-            case 5: this.startMinigame1()
-                break
-            //de momento
-            case 9: this.startMinigame2()
+            // case 5: this.startMinigame1()
+            //     break
+            // //de momento
+            // case 9: this.startMinigame2()
+            //     break
+            case 5: this.startLevel2()
                 break
         }
         levelsData[index].started = true
-        this.level.name = levelsData[index].name
-        this.level.type = levelsData[index].type
-        this.level.index = index
+
         if (this.audio) {
 
             this.audio.pause()
@@ -141,6 +163,7 @@ const BeatemApp = {
 
         // this.level.name = "level1"
         // this.level.type = "level"
+
         this.createLevel1()
 
         this.currentInterval = setInterval(() => {
@@ -152,6 +175,31 @@ const BeatemApp = {
             this.checkBulletsCollisions()
             this.checkPowerUpCollisions()
             this.readLevelData()
+            if (this.gameCompleted.enabled == false) this.checkGameCompleted()
+            else this.execDelayLaunchNextLevel()
+
+            // if (this.frames % 300 == 20) this.createEnemy()
+        }, 1000 / this.fps)
+    },
+
+    startLevel2() {
+
+        // this.level.name = "level1"
+        // this.level.type = "level"
+
+        this.createLevel2()
+
+        this.currentInterval = setInterval(() => {
+            this.clearAll()
+            this.collectGarbage()
+            this.drawLevel1()
+            this.manageFrames()
+            this.drawFrame()
+            this.checkBulletsCollisions()
+            this.checkPowerUpCollisions()
+            this.readLevelData()
+            if (this.gameCompleted.enabled == false) this.checkGameCompleted()
+            else this.execDelayLaunchNextLevel()
 
             // if (this.frames % 300 == 20) this.createEnemy()
         }, 1000 / this.fps)
@@ -242,6 +290,23 @@ const BeatemApp = {
         }, 1000 / this.fps)
     },
 
+    startTransition2() {
+
+        // this.level.name = "transition"
+        // this.level.type = "transition"
+
+        this.createTransition()
+        this.currentInterval = setInterval(() => {
+            this.clearAll()
+            this.collectGarbage()
+            this.drawTransition()
+            this.manageFrames()
+            this.drawFrame()
+
+            // if (this.frames % 300 == 20) this.createEnemy()
+        }, 1000 / this.fps)
+    },
+
     //TICK -------------------------------------------
 
     createCharacterSel() {
@@ -252,6 +317,19 @@ const BeatemApp = {
         // this.audio = new Audio("./music/intro.mp3")
         // this.audio.play()
         this.characterSelection = new CharacterSelection(this)
+    },
+
+    setDelayLaunchNextLevel() {
+        this.delay.start = this.frames
+        this.delay.end = this.frames + this.fps * 3
+    },
+
+    execDelayLaunchNextLevel() {
+        if (this.frames > this.delay.end) {
+            this.hideCompleted()
+            this.launchNextLevel()
+            this.delay = { start: 0, end: 0 }
+        }
     },
 
     createIntro() {
@@ -298,8 +376,18 @@ const BeatemApp = {
         // this.audio.src = "./music/level1.mp3"
         // this.audio.play()
         this.createBackground()
-        this.createPowerUp(900)
-        this.createPowerUp(1000)
+        this.createPowerUp(3200)
+        this.createPowerUp(4200)
+    },
+
+    createLevel2() {
+
+        // this.createPlayer()
+        // this.audio.pause()
+        // this.audio.src = "./music/level1.mp3"
+        // this.audio.play()
+        this.createBackground()
+        this.createPowerUp(1500)
     },
 
     createMinigame1() {
@@ -356,12 +444,16 @@ const BeatemApp = {
 
     drawCharacterSel() {
         this.characterSelection.draw()
-        console.log(this.enemies.length)
     },
 
     checkIntroFinished() {
         if (this.introImage.frame >= 400) return true
         else return false
+    },
+
+    playSound(source) {
+        this.sfxAudio.src = source
+        this.sfxAudio.play()
     },
 
     drawIntro() {
@@ -403,6 +495,7 @@ const BeatemApp = {
         this.drawEnemies()
         this.drawPowerUps()
         this.tryDrawGameOver()
+        this.tryDrawGameCompleted()
     },
 
     drawLevel2() {
@@ -434,13 +527,20 @@ const BeatemApp = {
         //esta primera condicion quedara antiguada cuando queramos spawnear cosas distintas a enemigos como armas o peatones
         if (this.enemies.length == 0) {
             const levelContent = levelsData[this.level.index].content
+            let levelFinished = true
             for (let i = 0; i < levelContent.length; i++) {
                 if (!levelContent[i].spawned && levelContent[i].location <= this.bgPosition.x) {
+                    levelFinished = false
                     levelContent[i].spawned = true
                     this.createEnemies(levelContent[i].enemies)
                     this.enemies.forEach(enemy => enemy.chase())
+                    if (levelContent[i].name == "boss") {
+                        this.audio.src = "./music/boss.mp3"
+                        this.audio.play()
+                    }
                 }
             }
+
         }
 
 
@@ -448,7 +548,6 @@ const BeatemApp = {
 
     createPlayer() {
         this.players.push(new Player(this, 200, 0, 15, 200, 200, this.playerKeys[this.players.length], this.players.length))
-        this.players[this.players.length - 1].setEventHandlers()
         console.log("playercreated")
     },
 
@@ -467,6 +566,7 @@ const BeatemApp = {
         if (enemy.location === undefined) enemyCreated = eval(`new ${enemy.class}(this, ${randomPos.x}, ${randomPos.y}, ${randomPos.z}, 100,100)`)
         else enemyCreated = eval(`new ${enemy.class}(this, ${enemy.location.x}, ${enemy.location.y}, ${enemy.location.z}, 100,100)`)
         this.enemies.push(enemyCreated)
+        enemyCreated.setHitSound()
         return enemyCreated
     },
 
@@ -478,7 +578,7 @@ const BeatemApp = {
     },
 
     createPowerUp(posX) {
-        this.powerUps.push(new PowerUp(this, posX, 0, 0, 50, 50))
+        this.powerUps.push(new PowerUp(this, posX, 0, Math.random() * 250, 50, 50, "cat"))
     },
 
     manageFrames() {
@@ -489,7 +589,7 @@ const BeatemApp = {
     },
 
     createBackground() {
-        this.background = new Background(this, this.gameSize.w, this.gameSize.h, "./images/bgSimpsons1.png")
+        this.background = new Background(this, this.gameSize.w, this.gameSize.h, levelsData[this.level.index].bg)
     },
 
 
@@ -546,6 +646,7 @@ const BeatemApp = {
                     this.enemies[i].receiveDmg(bullet.dmg)
                     this.checkAlive(this.enemies[i])
                     this.bullets.splice(this.bullets.indexOf(bullet), 1)
+                    this.playSound("./SFX/other/hit2.mp3")
                     break
                 }
             }
@@ -605,6 +706,7 @@ const BeatemApp = {
             this.players.forEach(player => {
                 if (this.checkForCollision(powerUp, player, 70)) {
                     this.powerUps.splice(this.powerUps.indexOf(powerUp), 1)
+                    this.playSound("./SFX/other/coin3.mp3")
                     player.upgradeWeapon()
 
                 }
@@ -711,17 +813,48 @@ const BeatemApp = {
         if (playerIndex == 0) hand = this.characterSelection.hand1Position
         else hand = this.characterSelection.hand2Position
         this.players[playerIndex].playerCharacter = characterSelData.characters[hand].character
-        this.players[playerIndex].updateHudMini()
+        this.characterSelection.playSelectedAudio(characterSelData.characters[hand].character)
+        this.players[playerIndex].characterSelected()
         // console.log(this.players[playerIndex].playerCharacter)
     },
 
     showGameOver() {
         this.gameOver.enabled = true
+        this.audio.src = "./music/gameOver.mp3"
+        this.audio.play()
     },
 
     hideGameOver() {
         this.gameOver.transparency = 0
         this.gameOver.enabled = false
+    },
+
+    showCompleted() {
+        this.gameCompleted.enabled = true
+        this.gameLocked = true
+        this.audio.src = "./music/complete.mp3"
+        this.audio.play()
+    },
+
+    hideCompleted() {
+        this.gameCompleted.enabled = false
+        this.gameLocked = false
+    },
+
+    checkGameCompleted() {
+        const levelContent = levelsData[this.level.index].content
+        let levelFinished = true
+        for (let i = 0; i < levelContent.length; i++) {
+            if (!levelContent[i].spawned || this.enemies.length > 0) levelFinished = false
+        }
+        // levelFinished = true
+        if (levelFinished) {
+            this.showCompleted()
+            this.setDelayLaunchNextLevel()
+            return true
+        }
+        else return false
+
     },
 
     returnToCharacterSel() {
@@ -735,18 +868,21 @@ const BeatemApp = {
         this.bullets = []
         this.heads = []
         this.launchNextLevel()
+        this.gameOver.enabled = false
     },
 
     tryDrawGameOver() {
         if (this.gameOver.enabled) {
-            console.log("drawing gameover")
-            if (this.gameOver.transparency <= 1) this.gameOver.transparency += 0.001
-            // this.ctx.globalAlpha = this.gameOver.transparency
             this.ctx.drawImage(this.gameOver.instance, 0, 0, this.gameSize.w, this.gameSize.h)
-            // this.ctx.globalAlpha = 1
-            console.log("gameover")
         }
-    }
+    },
+
+    tryDrawGameCompleted() {
+        if (this.gameCompleted.enabled) {
+
+            this.ctx.drawImage(this.gameCompleted.instance, 0, 0, this.gameSize.w, this.gameSize.h)
+        }
+    },
     //////////////// NIVEL 2
 }
 

@@ -5,30 +5,48 @@ class Enemy extends Character {
 
         this.rectangleColor = "red"
         this.characterLive = 100
-        this.characterDmg = 60
+        this.characterDmg = 15
         this.chasedPlayer = null
+        this.isChasing = false
         this.state = "idle"
+        this.playerCharacter = "dizzy"
     }
 
-    init() {
-        this.image.instance = new Image()
-        this.image.instance.src = "./images/enemies/player.png"
-    }
+    // init() {
+    //     this.image.instance = new Image()
+    //     this.image.instance.src = "./images/enemies/player.png"
+    // }
 
     chase() {
-        this.state = "chase"
-        this.chasedPlayer = this.app.findNearestPlayer(this)
-        console.log("chasing")
+        this.isChasing = true
+        if (this.app.players.length > 0) this.chasedPlayer = this.app.findNearestPlayer(this)
+    }
+
+    idle() {
+        this.isChasing = false
+        if (Math.random() > 0.9) this.actorVel = { x: 0, y: 0, z: 0 }
+
+    }
+
+    setHitSound() {
+        this.hitAudio = new Audio
+        this.hitAudio.volume = 1
+        // let randomInt = Math.floor(Math.random() * 2)
+        let randomInt = 0
+        if (Math.random() > 0.5) randomInt = 1
+        else randomInt = 2
+        this.hitAudio.src = "./SFX/" + "other" + "/hit" + 2 + ".wav"
     }
 
 
     setAttackBehaviour() {
-        switch (this.state) {
 
-            case "idle":
+        switch (this.isChasing) {
+
+            case false:
                 break
-            case "chase":
-                if (this.app.frames % 100 == 0 && this.app.actorsDistance(this, this.chasedPlayer) < 100) {
+            case true:
+                if (this.app.frames % 60 == 0 && this.app.actorsDistance(this, this.chasedPlayer) < 250) {
                     this.attack()
                 }
                 // this.actorVel = chasedPlayer.actorPos - this.actorPos
@@ -37,16 +55,16 @@ class Enemy extends Character {
     }
 
     setMoveVelocity() {
-        switch (this.state) {
+        switch (this.isChasing) {
 
 
-            case "idle":
+            case false:
                 break
-            case "chase":
+            case true:
                 //harcoded
                 // this.chasedPlayer = this.app.players[0]
                 //hardcoded
-                const a = this.chasedPlayer.actorPos.x - this.actorPos.x
+                const a = this.chasedPlayer.actorPos.x + 100 - this.actorPos.x
                 const c = this.chasedPlayer.actorPos.z - this.actorPos.z
                 const module = Math.sqrt(a * a + c * c)
                 //aun nose porque el chase parece ir mas rapido en el z que en el x, pero lo compenso aqui
@@ -70,9 +88,14 @@ class Enemy extends Character {
     }
 
     tick() {
+
+        if (this.isChasing == true && this.app.frames % (Math.floor(Math.random() * 10) * 100) == 0) this.idle()
+        else if (this.isChasing == false && this.app.frames % (Math.floor(Math.random() * 10) * 50) == 0) this.chase()
         if (this.app.level.name == "minigame1") this.playBallonMinigame()
         else if (this.app.level.name == "minigame2") this.playSlapMinigame()
         this.setAttackBehaviour()
+        this.updateAnimState()
+        console.log(this.isChasing)
 
     }
 
@@ -95,9 +118,10 @@ class Enemy1 extends Enemy {
 
     constructor(app, posX, posY, posZ, width, height) {
         super(app, posX, posY, posZ, width, height)
+        this.playerCharacter = "dizzy"
 
         this.rectangleColor = "purple"
-        this.characterSpeed = Math.random() * 1.5 + 2
+        this.characterSpeed = Math.random() * 1.5 + 3
 
         this.characterLive = 50
     }
@@ -110,8 +134,10 @@ class Enemy2 extends Enemy {
     constructor(app, posX, posY, posZ, width, height) {
         super(app, posX, posY, posZ, width, height)
 
+        this.playerCharacter = "ball"
+
         this.rectangleColor = "pink"
-        this.characterSpeed = .3
+        this.characterSpeed = Math.random() * 1.5 + 3
 
         this.characterLive = 75
 
@@ -125,11 +151,25 @@ class Enemy3 extends Enemy {
         super(app, posX, posY, posZ, width, height)
         this.actorSize = { w: 300, h: 300 }
         this.enemySize = { w: width, h: height }
-
+        this.playerCharacter = "bear"
+        this.characterDmg = 25
         this.rectangleColor = "black"
-        this.characterSpeed = 2
+        this.characterSpeed = Math.random() * 1.5 + 6
 
-        this.characterLive = 200
+        this.characterLive = 500
 
+    }
+
+
+    receiveDmg(dmg) {
+
+
+        this.characterLive -= dmg
+
+        //solo para comprobar como recibe daño
+        this.actorSize.h += 25
+        this.actorSize.w += 25
+        this.startEstheticDmg()
+        this.hitAudio.play()
     }
 }

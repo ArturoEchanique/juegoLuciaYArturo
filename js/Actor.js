@@ -12,6 +12,7 @@ class Actor {
         this.image = { instance: undefined, frameIndex: 0, totalFrames: 3, source: "./images/enemies/player.png", animTime: 10 }
         this.actorVel = { x: 0, y: 0, z: 0 }
         this.actorPhysics = { gravity: .5 }
+        this.delay = { start: 0, finish: 0 }
         this.init()
 
     }
@@ -32,10 +33,6 @@ class Actor {
     }
 
     draw() {
-        // this.app.ctx.drawImage(this.image.instance, 40, 40, 50, 50)
-
-        // adjusts the speed according to the arrow keys being pressed
-        // this.setMoveVelocity()
 
         this.app.ctx.drawImage(
             this.image.instance,
@@ -50,14 +47,13 @@ class Actor {
         this.animate(this.app.frames)
         this.move()
         this.tick()
-        // this.app.ctx.fillStyle = this.rectangleColor
-        // this.app.ctx.fillRect(this.getDrawPosX(), this.getDrawPosY(), this.actorSize.w, this.actorSize.h)
     }
 
     setMoveVelocity() {
 
     }
 
+    //sobreescrito en player
     setPosition() {
         if (this.actorPos.x < 30 && this.actorVel.x < 0) {
             this.actorPos.x += 0
@@ -73,7 +69,7 @@ class Actor {
 
         }
         /// ARRIBA
-        else if (this.actorPos.z > 300 && this.actorVel.z > 0) {
+        else if (this.actorPos.z > 200 && this.actorVel.z > 0) {
             this.actorPos.z += 0
         }
         else this.actorPos.z += this.actorVel.z

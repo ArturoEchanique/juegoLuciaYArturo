@@ -30,15 +30,16 @@ var levelsData = [
         name: "level1",
         type: "level",
         music: "./music/level1.mp3",
+        bg: "./images/bgSimpsons1.png",
         started: false,
         completed: false,
         content: [
             {
                 name: "sector1",
-                location: 200,
+                location: 400,
                 enemies: [
                     {
-                        class: "Enemy3",
+                        class: "Enemy1",
                         location: undefined,
                     },
                     {
@@ -57,14 +58,14 @@ var levelsData = [
 
             {
                 name: "sector2",
-                location: 600,
+                location: 1500,
                 enemies: [
                     {
                         class: "Enemy1",
                         location: undefined,
                     },
                     {
-                        class: "Enemy1",
+                        class: "Enemy2",
                         location: undefined,
                     },
                     {
@@ -82,10 +83,14 @@ var levelsData = [
             },
             {
                 name: "sector3",
-                location: 1000,
+                location: 2400,
                 enemies: [
                     {
                         class: "Enemy1",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy2",
                         location: undefined,
                     },
                     {
@@ -94,6 +99,28 @@ var levelsData = [
                     },
                     {
                         class: "Enemy2",
+                        location: undefined,
+                    }
+                ],
+                completed: false,
+                spawned: false,
+
+            },
+
+            {
+                name: "sector4",
+                location: 3400,
+                enemies: [
+                    {
+                        class: "Enemy1",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy2",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy1",
                         location: undefined,
                     },
                     {
@@ -108,7 +135,165 @@ var levelsData = [
 
             {
                 name: "boss",
-                location: 2000,
+                location: 5100,
+                enemies: [
+                    {
+                        class: "Enemy1",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy1",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy3",
+                        location: undefined,
+                    }
+                ],
+                completed: false,
+                spawned: false,
+
+            },
+        ]
+
+    },
+    {
+        name: "transition2",
+        type: "transition",
+        music: "./music/transition.mp3",
+        started: false,
+        completed: false,
+        content: {
+            stageNumber: "STAGE 2",
+            stageName: "            KRUSTYLAND",
+        }
+
+    },
+    // {
+    //     name: "minigame1",
+    //     type: "minigame",
+    //     music: "./music/bonus1.mp3",
+    //     started: false,
+    //     completed: false,
+
+    // },
+    // {
+    //     name: "transition3",
+    //     type: "transition",
+    //     music: "./music/intro.mp3",
+    //     started: false,
+    //     completed: false,
+
+    // },
+    {
+        name: "level2",
+        type: "level",
+        music: "./music/krustyland.mp3",
+        bg: "./images/bgSimpsons2.png",
+        started: false,
+        completed: false,
+        content: [
+            {
+                name: "sector1",
+                location: 200,
+                enemies: [
+                    {
+                        class: "Enemy1",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy1",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy1",
+                        location: undefined,
+                    },
+                ],
+                completed: false,
+                spawned: false,
+
+            },
+
+            {
+                name: "sector2",
+                location: 1000,
+                enemies: [
+                    {
+                        class: "Enemy1",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy2",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy1",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy1",
+                        location: undefined,
+                    }
+                ],
+                completed: false,
+                spawned: false,
+
+            },
+            {
+                name: "sector3",
+                location: 1800,
+                enemies: [
+                    {
+                        class: "Enemy1",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy2",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy1",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy2",
+                        location: undefined,
+                    }
+                ],
+                completed: false,
+                spawned: false,
+
+            },
+            {
+                name: "sector4",
+                location: 3800,
+                enemies: [
+                    {
+                        class: "Enemy1",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy2",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy1",
+                        location: undefined,
+                    },
+                    {
+                        class: "Enemy2",
+                        location: undefined,
+                    }
+                ],
+                completed: false,
+                spawned: false,
+
+            },
+
+            {
+                name: "boss",
+                location: 5000,
                 enemies: [
                     {
                         class: "Enemy1",
@@ -140,42 +325,6 @@ var levelsData = [
 
             },
         ]
-
-    },
-    {
-        name: "transition2",
-        type: "transition",
-        music: "./music/transition.mp3",
-        started: false,
-        completed: false,
-        content: {
-            stageNumber: "STAGE 2",
-            stageName: "KRUSTYLAND",
-        }
-
-    },
-    {
-        name: "minigame1",
-        type: "minigame",
-        music: "./music/bonus1.mp3",
-        started: false,
-        completed: false,
-
-    },
-    {
-        name: "transition3",
-        type: "transition",
-        music: "./music/intro.mp3",
-        started: false,
-        completed: false,
-
-    },
-    {
-        name: "level2",
-        type: "level",
-        music: "./music/intro.mp3",
-        started: false,
-        completed: false,
 
     },
     {
@@ -211,6 +360,70 @@ var levelsData = [
 
     },
 ]
+
+
+// //
+// var characterSfxData = {
+
+//     homer: { hit: 1, walk: 8, attack: 13 },
+//     marge: { hit: 1, walk: 8, attack: 5 },
+//     bart: { hit: 1, walk: 8, attack: 13 },
+//     lisa: { hit: 1, walk: 4, attack: 8 },
+//     bear: { hit: 4, walk: 4, attack: 4 },
+//     ball: { hit: 5, walk: 5, attack: 5 },
+//     krusty: { hit: 1, walk: 1, attack: 1 },
+//     krusty: { hit: 1, walk: 1, attack: 1 },
+// }
+
+//animation FRAMES
+var characterAnimData = {
+
+    homer: { idle: 1, walk: 8, attack: 13 },
+    marge: { idle: 1, walk: 8, attack: 5 },
+    bart: { idle: 1, walk: 6, attack: 4 },
+    lisa: { idle: 1, walk: 8, attack: 8 },
+    bear: { idle: 4, walk: 4, attack: 4 },
+    ball: { idle: 5, walk: 5, attack: 5 },
+    krusty: { idle: 1, walk: 1, attack: 1 },
+    dizzy: { idle: 5, walk: 5, attack: 3 },
+}
+
+var characterAnimSizeWData = {
+
+    homer: { idle: .75, walk: 0.95, attack: 1.1 },
+    marge: { idle: .85, walk: .85, attack: 1.3 },
+    bart: { idle: .8, walk: 1.1, attack: 1.2 },
+    lisa: { idle: .9, walk: .85, attack: 1 },
+    bear: { idle: 1, walk: 1, attack: 1 },
+    ball: { idle: 1, walk: 1, attack: 1 },
+    krusty: { idle: 1, walk: 1, attack: 1 },
+    dizzy: { idle: 1, walk: 1, attack: 1 },
+}
+
+var characterAnimSizeHData = {
+
+    homer: { idle: 1, walk: 1, attack: 1.1 },
+    marge: { idle: 1.1, walk: 1.1, attack: 1.3 },
+    bart: { idle: 1, walk: 1.1, attack: 1.2 },
+    lisa: { idle: .95, walk: .9, attack: 1 },
+    bear: { idle: 1, walk: 1, attack: 1 },
+    ball: { idle: 1, walk: 1, attack: 1 },
+    krusty: { idle: 1, walk: 1, attack: 1 },
+    dizzy: { idle: 1, walk: 1, attack: 1 },
+}
+
+//1-5 mas o menos, se suma a la velocidad actual
+var characterAnimSpeedData = {
+
+    homer: { idle: 0, walk: 0, attack: 0 },
+    marge: { idle: 0, walk: 0, attack: 0 },
+    bart: { idle: 0, walk: 0, attack: 0 },
+    lisa: { idle: 0, walk: 0, attack: 0 },
+    bear: { idle: 2, walk: 2, attack: 2 },
+    ball: { idle: 2, walk: 2, attack: 2 },
+    krusty: { idle: 0, walk: 0, attack: 0 },
+    dizzy: { idle: 0, walk: 0, attack: 0 },
+}
 
 
 
@@ -287,5 +500,13 @@ var characterSelData = {
 var transitionsData = {
     tvImage: "./images/transitions/tv.png",
     handImage: "./images/transitions/hand.png",
-    bunnyImage: "./images/transitions/bunny.png",
+    bunnyImage: "./images/characters/bunny/walk.png",
+}
+
+var powerUps = {
+    cat: "./images/powerUps/idle.png",
+    hammer: "./images/powerUps/hammer.png",
+    bottle: "./images/powerUps/bottle.png",
+    plant: "./images/powerUps/plant.png",
+
 }

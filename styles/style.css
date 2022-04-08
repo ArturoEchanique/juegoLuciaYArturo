@@ -20,7 +20,25 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-left: 80px;
-    padding-top: 500px;
+    padding-left: 20px;
+    padding-top: 5px;
 
 }
+
+body {
+    background-color: black;
+}
+
+/* #game-board {
+
+    /* Can be in percentage also. */
+
+display: flex;
+align-items: center;
+justify-content: center;
+padding-left: 20px;
+padding-top: 200px;
+
+}
+
+*/

@@ -40,7 +40,6 @@ class Transition {
     draw() {
 
 
-        console.log("drawing")
         this.app.ctx.fillStyle = "white"
         this.app.ctx.font = '50px serif'
         this.app.ctx.fillText(this.characterLive, 200 * (this.playerIndex + 1), 50, 100)
@@ -104,8 +103,8 @@ class Transition {
 
         this.animateHand(this.app.frames)
         this.animateBunny(this.app.frames)
-        this.bunnyImage.frameIndex2 += 2
-        if (this.bunnyImage.frameIndex2 >= 300) {
+        this.bunnyImage.frameIndex2 += 8
+        if (this.bunnyImage.frameIndex2 >= 1200) {
             this.app.launchNextLevel()
         }
     }
@@ -121,7 +120,7 @@ class Transition {
     }
 
     animateBunny(framesCounter) {
-        if (framesCounter % 3 == 0) {
+        if (framesCounter % 3000 == 0) {
             this.bunnyImage.frameIndex++
 
         }

@@ -5,7 +5,8 @@ class CharacterSelection {
         this.handPositions = [125, 405, 683, 965]
         this.hand1Position = 0
         this.hand2Position = 1
-        this.delay = { started: false, frame: 0, seconds: 0, callback: undefined }
+        this.selectedAudio = undefined
+        this.delay = { start: 0, finish: 0 }
         this.playersDone = { one: false, two: false }
         this.bgImage = { instance: undefined, source: "./images/enemies/player.png" }
         this.pImages = [{ instance: undefined, source: "./images/enemies/player.png" },
@@ -22,6 +23,8 @@ class CharacterSelection {
     }
 
     init() {
+        this.selectedAudio = new Audio()
+
         this.hand2Position = -1
         this.bgImage.instance = new Image()
         this.bgImage.instance.src = characterSelData.bgImage
@@ -68,18 +71,16 @@ class CharacterSelection {
 
     tick() {
 
-
+        this.tryExecSelectionDelay()
     }
 
     moveHand(direction, playerIndex) {
-        console.log("moving hand")
         if (playerIndex == 0 && this.playersDone.one == false) {
             if ((this.hand1Position + direction + 4) % 4 == this.hand2Position) {
                 direction *= 2
 
             }
             this.hand1Position = (this.hand1Position + direction + 4) % 4
-            console.log(this.hand1Position)
         }
         else if (playerIndex == 1 && this.playersDone.two == false) {
             if ((this.hand2Position + direction + 4) % 4 == this.hand1Position) direction *= 2
@@ -88,6 +89,21 @@ class CharacterSelection {
 
         }
     }
+
+    startSelectionDelay() {
+        this.delay.start = this.app.frames + this.app.fps * 1
+        this.delay.end = this.app.frames + this.app.fps * 2
+    }
+
+    tryExecSelectionDelay() {
+        if (this.app.frames > this.delay.start && this.app.frames < this.delay.end) {
+            this.app.launchNextLevel()
+            this.delay = { start: 0, finish: 0 }
+        }
+
+
+    }
+
 
 
     // execDelay() {
@@ -104,10 +120,29 @@ class CharacterSelection {
     //     callback()
 
     // }
+    playSelectedAudio(character) {
 
+        switch (character) {
+            case "bart":
+                this.selectedAudio.src = "./SFX/bart/09.mp3"
+                break
+            case "lisa":
+                this.selectedAudio.src = "./SFX/lisa/07.mp3"
+                break
+            case "homer":
+                this.selectedAudio.src = "./SFX/homer/09.mp3"
+                break
+            case "marge":
+                this.selectedAudio.src = "./SFX/marge/03.mp3"
+                break
+
+        }
+        this.selectedAudio.play()
+    }
 
 
     selectCharacter(playerIndex) {
+
         if (playerIndex == 0) {
             this.pImages[this.hand1Position].instance.src = characterSelData.characters[this.hand1Position].source2
             this.playersDone.one = true
@@ -117,11 +152,11 @@ class CharacterSelection {
             this.playersDone.two = true
         }
         if (this.app.players.length == 1 && this.playersDone.one) {
-            this.app.launchNextLevel()
+            this.startSelectionDelay()
         }
 
         if (this.playersDone.one && this.playersDone.two) {
-            this.app.launchNextLevel()
+            this.startSelectionDelay()
         }
     }
 
