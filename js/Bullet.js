@@ -4,7 +4,7 @@ class Bullet extends Actor {
         super(app, posX, posY, posZ, width, height)
         this.bulletRadius = this.actorSize.w;
         this.catAudio = undefined
-        this.dmg = 50
+        this.dmg = 25
         this.init()
 
     }

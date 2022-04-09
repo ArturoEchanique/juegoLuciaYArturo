@@ -18,6 +18,7 @@ const BeatemApp = {
     introImagePre: { instance: undefined, frame: 7, totalFrames: 300 },
     introImage: { instance: undefined, frame: 7, totalFrames: 300 },
     minigameBg: { instance: undefined, source: "./images/misc/miniBg1.png" },
+    minigameEnded: false,
 
 
     player2alreadyAdded: false,
@@ -72,7 +73,7 @@ const BeatemApp = {
 
 
         this.drawBlackScreen()
-        // this.startMinigame1()
+        // this.launchLevel(5)
 
 
     },
@@ -155,11 +156,11 @@ const BeatemApp = {
                 break
             case 4: this.startTransition2()
                 break
-            // case 5: this.startMinigame1()
-            //     break
-            // //de momento
-            // case 9: this.startMinigame2()
-            //     break
+            case 5: this.startMinigame1()
+                break
+            //de momento
+            case 9: this.startMinigame2()
+                break
             case 5: this.startLevel2()
                 break
         }
@@ -420,17 +421,39 @@ const BeatemApp = {
         this.minigameBg.instance.src = this.minigameBg.source
         // this.createPlayer()
         for (let i = 0; i < this.players.length; i++) {
-            this.players[i].actorPos.x = 267 * i + 150
-            this.players[i].actorPos.z = 100
+            this.players[i].actorPos.x = 270 * i + 190
+            this.players[i].actorPos.z = 0
             this.players[i].actorHead = this.createHead(minigame1.heads[i])
+            this.players[i].actorHead.image.instance.src = "./images/minigame/" + this.players[i].playerCharacter + ".png"
+            this.players[i].actorHead.bluePos.x = 270 * i + 180
+            this.players[i].actorHead.bluePos.y = 635
+            this.players[i].stopAnimation = true
+            this.players[i].actorSize = { w: 300, h: 300 }
+            this.players[i].changeState("blow")
         }
         for (let i = 0; i < 4; i++) {
             if (this.players[i]) {
 
             }
             else {
-                let newEnemy = this.createEnemy(minigame1.enemies[i])
+                let arr = [...this.players]
+                arr.push(...this.enemies)
+                const newEnemy = this.createEnemy(minigame1.enemies[i])
                 newEnemy.actorHead = this.createHead(minigame1.heads[i])
+                newEnemy.playerCharacter = "bart"
+                arr.forEach(player => {
+                    if (true) {
+                        while (player.playerCharacter === newEnemy.playerCharacter) {
+                            newEnemy.playerCharacter = playableCharacters[(playableCharacters.indexOf(newEnemy.playerCharacter) + 1) % playableCharacters.length]
+                        }
+                    }
+                })
+                newEnemy.actorHead.image.instance.src = "./images/minigame/" + newEnemy.playerCharacter + ".png"
+                newEnemy.actorSize = { w: 300, h: 300 }
+                newEnemy.actorPos.z = 0
+                newEnemy.actorHead.bluePos.x = 270 * i + 180
+                newEnemy.actorHead.bluePos.y = 635
+                newEnemy.changeState("blow")
 
 
             }
@@ -538,8 +561,8 @@ const BeatemApp = {
     drawMinigame1() {
         this.ctx.drawImage(this.minigameBg.instance, 0, 0, this.gameSize.w, this.gameSize.h)
         this.players.forEach(player => player.draw())
-        this.heads.forEach(head => head.draw())
         this.drawEnemies()
+        this.heads.forEach(head => head.draw())
     },
 
     drawMinigame2() {
@@ -731,6 +754,37 @@ const BeatemApp = {
         // this.enemies.push(eval(`new ${enemyStr}(this, this.bgPosition.x + 1200, 0, Math.random() * 500 -300, 50, 50)`))
     },
 
+    finishBlowMinigame() {
+        this.audio.pause()
+        this.minigameEnded = true
+        this.playSound("./music/result.mp3")
+        let arr = [...this.players]
+        arr.push(...this.enemies)
+        arr.forEach(player => player.actorHead.resultsImage.enabled = true)
+        let rank = 0
+        while (arr.length > 0) {
+            rank++
+            let max = -1
+            let maxHead = undefined
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i].actorHead.headSize > max) {
+                    // arr[i].resultsImage.enabled = true
+                    max = arr[i].actorHead.headSize
+                    maxHead = arr[i].actorHead
+                }
+            }
+            maxHead.resultsImage.enabled = true
+            maxHead.resultsImage.instance.src = "./images/minigame/" + rank + ".png"
+            console.log("rank asigned", rank)
+
+
+            arr.splice(arr.indexOf(maxHead), 1)
+            console.log(arr.length)
+        }
+
+        // arr.forEach(player => player.actorHead.resultsImage.enabled = true)
+        // w
+    },
 
     //tambien hay que hacer que encuanto encuentre un objetivo que beneficie solo a ese y haga break, por lo que
     //el segundo foreach deberia ser un for clasico

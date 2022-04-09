@@ -29,8 +29,10 @@ class Actor {
     }
 
     getDrawPosY() {
-        return this.app.gameSize.h - this.actorSize.h - (this.actorPos.y + this.actorPos.z) - this.app.bgPosition.y
+        return this.app.gameSize.h - this.actorSize.h - this.app.bgPosition.y - this.actorPos.z - this.actorPos.y
     }
+    // return this.app.gameSize.h - this.actorSize.h - (this.actorPos.y + this.actorPos.z) - this.app.bgPosition.y + this.image.instance.height
+
 
     draw() {
 

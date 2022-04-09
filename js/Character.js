@@ -11,6 +11,9 @@ class Character extends Actor {
         this.characterDmg = 50
         this.isDiying = false
         this.canDraw = true
+        this.stopAnimation = false
+        this.isBlowing = false
+        this.blowTimer = undefined
 
         this.whoosh = { audio1: undefined, audio2: undefined, index: 0 }
 
@@ -56,6 +59,7 @@ class Character extends Actor {
     }
 
     draw() {
+
         if (this.isDiying) {
             if (this.app.frames % 2 == 0) this.canDraw = !this.canDraw
         }
@@ -76,11 +80,17 @@ class Character extends Actor {
         this.animate(this.app.frames)
         this.move()
         this.tick()
+        // this.app.ctx.fillStyle = "red"
+        // this.app.ctx.fillRect(this.getDrawPosX(), this.getDrawPosY(), 30, 30)
     }
 
     updateAnimImageSrc() {
         this.image.instance.src = "./images/characters/" + this.playerCharacter + "/" + this.state + ".png"
         this.animationFrames = characterAnimData[this.playerCharacter]
+    }
+
+    getDrawPosY() {
+        return this.app.gameSize.h - this.actorSize.h * characterAnimSizeHData[this.playerCharacter][this.state] - this.app.bgPosition.y - this.actorPos.z - this.actorPos.y
     }
 
 
@@ -194,7 +204,24 @@ class Character extends Actor {
     // }
 
     blowBalloon() {
-        this.actorHead.blow()
+        if (!this.app.minigameEnded) {
+            this.actorHead.blow()
+            if (this.whoosh.index == 0) {
+                this.whoosh.audio1.play()
+                this.whoosh.index = 1
+            }
+            else {
+                this.whoosh.audio2.play()
+                this.whoosh.index = 0
+            }
+            this.isBlowing = true
+            this.stopAnimation = false
+            clearTimeout(this.blowTimer)
+            this.blowTimer = setTimeout(() => {
+                this.isBlowing = false
+            }, 150);
+        }
+
     }
 
     handSlapAnim() {
@@ -208,14 +235,16 @@ class Character extends Actor {
 
     animate(framesCounter) {
 
-        if (framesCounter % (this.image.animFrameTime - characterAnimSpeedData[this.playerCharacter][this.state]) == 0) {
+        if (!this.stopAnimation && framesCounter % (this.image.animFrameTime - characterAnimSpeedData[this.playerCharacter][this.state]) == 0) {
 
             this.image.frameIndex++;
         }
         if (this.image.frameIndex >= this.image.totalFrames && this.state == "attack") this.isAttacking = false
         else if (this.image.frameIndex >= this.image.totalFrames) {
             this.image.frameIndex = 0;
+            if (!this.isBlowing && this.app.level.type == "minigame") this.stopAnimation = true
         }
+
 
     }
 
@@ -231,12 +260,15 @@ class Character extends Actor {
             case "attack":
                 this.image.totalFrames = this.animationFrames.attack
                 break
+            case "blow":
+                this.image.totalFrames = 3
+                break
         }
         this.updateAnimImageSrc()
     }
 
     updateAnimState() {
-        if (!this.isAttacking) {
+        if (!this.isAttacking && this.app.level.type != "minigame") {
             const a = this.actorVel.x + this.app.bgSpeed.x
             const b = this.actorVel.y
             const c = this.actorVel.z

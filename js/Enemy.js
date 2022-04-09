@@ -78,6 +78,7 @@ class Enemy extends Character {
     playBallonMinigame() {
         if (this.app.frames % (Math.floor(Math.random() * 60)) == 0) {
             this.blowBalloon()
+
         }
     }
 
@@ -89,10 +90,13 @@ class Enemy extends Character {
 
     tick() {
 
-        if (this.isChasing == true && this.app.frames % (Math.floor(Math.random() * 10) * 100) == 0) this.idle()
-        else if (this.isChasing == false && this.app.frames % (Math.floor(Math.random() * 10) * 50) == 0) this.chase()
-        if (this.app.level.name == "minigame1") this.playBallonMinigame()
+
+        if (this.app.level.name == "minigame1") {
+            this.playBallonMinigame()
+        }
         else if (this.app.level.name == "minigame2") this.playSlapMinigame()
+        else if (this.isChasing == true && this.app.frames % (Math.floor(Math.random() * 10) * 100) == 0) this.idle()
+        else if (this.isChasing == false && this.app.frames % (Math.floor(Math.random() * 10) * 50) == 0) this.chase()
         this.setAttackBehaviour()
         this.updateAnimState()
 

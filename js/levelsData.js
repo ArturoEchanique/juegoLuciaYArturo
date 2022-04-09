@@ -169,22 +169,22 @@ var levelsData = [
         }
 
     },
-    // {
-    //     name: "minigame1",
-    //     type: "minigame",
-    //     music: "./music/bonus1.mp3",
-    //     started: false,
-    //     completed: false,
+    {
+        name: "minigame1",
+        type: "minigame",
+        music: "./music/bonus1.mp3",
+        started: false,
+        completed: false,
 
-    // },
-    // {
-    //     name: "transition3",
-    //     type: "transition",
-    //     music: "./music/intro.mp3",
-    //     started: false,
-    //     completed: false,
+    },
+    {
+        name: "transition3",
+        type: "transition",
+        music: "./music/intro.mp3",
+        started: false,
+        completed: false,
 
-    // },
+    },
     {
         name: "level2",
         type: "level",
@@ -378,10 +378,10 @@ var levelsData = [
 //animation FRAMES
 const characterAnimData = {
 
-    homer: { idle: 1, walk: 8, attack: 13 },
-    marge: { idle: 1, walk: 8, attack: 5 },
-    bart: { idle: 1, walk: 6, attack: 4 },
-    lisa: { idle: 1, walk: 8, attack: 8 },
+    homer: { idle: 1, walk: 8, attack: 13, blow: 3 },
+    marge: { idle: 1, walk: 8, attack: 5, blow: 3 },
+    bart: { idle: 1, walk: 6, attack: 4, blow: 3 },
+    lisa: { idle: 1, walk: 8, attack: 4, blow: 3 },
     bear: { idle: 4, walk: 4, attack: 4 },
     ball: { idle: 5, walk: 5, attack: 5 },
     krusty: { idle: 1, walk: 1, attack: 1 },
@@ -390,10 +390,10 @@ const characterAnimData = {
 
 const characterAnimSizeWData = {
 
-    homer: { idle: .75, walk: 0.95, attack: 1.1 },
-    marge: { idle: .85, walk: .85, attack: 1.3 },
-    bart: { idle: .7, walk: 1, attack: 1.1 },
-    lisa: { idle: .7, walk: .75, attack: 1 },
+    homer: { idle: .75, walk: 0.95, attack: 1.1, blow: .5 },
+    marge: { idle: .8, walk: .8, attack: 1.35, blow: .5 },
+    bart: { idle: .7, walk: .94, attack: 1.1, blow: .5 },
+    lisa: { idle: .7, walk: .75, attack: 1, blow: .38 },
     bear: { idle: 1, walk: 1, attack: 1 },
     ball: { idle: 1, walk: 1, attack: 1 },
     krusty: { idle: 1, walk: 1, attack: 1 },
@@ -402,23 +402,23 @@ const characterAnimSizeWData = {
 
 const characterAnimSizeHData = {
 
-    homer: { idle: 1, walk: 1, attack: 1.1 },
-    marge: { idle: 1.1, walk: 1.1, attack: 1.3 },
-    bart: { idle: 0.9, walk: 1, attack: 1.1 },
-    lisa: { idle: .85, walk: .8, attack: .8 },
+    homer: { idle: 1, walk: 1, attack: 1.1, blow: 1 },
+    marge: { idle: 1.1, walk: 1.1, attack: 1.15, blow: 1 },
+    bart: { idle: 1, walk: 1, attack: 1.1, blow: .6 },
+    lisa: { idle: .85, walk: .8, attack: .8, blow: .6 },
     bear: { idle: 1, walk: 1, attack: 1 },
     ball: { idle: 1, walk: 1, attack: 1 },
     krusty: { idle: 1, walk: 1, attack: 1 },
     dizzy: { idle: 1, walk: 1, attack: 1 },
 }
 
-//1-5 mas o menos, se suma a la velocidad actual
+//-5 +5 mas o menos, se suma a la velocidad actual
 const characterAnimSpeedData = {
 
-    homer: { idle: 0, walk: 0, attack: 3 },
-    marge: { idle: 0, walk: 0, attack: 2 },
-    bart: { idle: 0, walk: 0, attack: 2 },
-    lisa: { idle: 0, walk: 0, attack: 2 },
+    homer: { idle: 0, walk: 0, attack: 3, blow: 0 },
+    marge: { idle: 0, walk: 0, attack: 2, blow: 0 },
+    bart: { idle: 0, walk: 0, attack: 2, blow: 0 },
+    lisa: { idle: 0, walk: 0, attack: 2, blow: 0 },
     bear: { idle: 2, walk: 2, attack: 2 },
     ball: { idle: 2, walk: 2, attack: 2 },
     krusty: { idle: 0, walk: 0, attack: 0 },
@@ -432,37 +432,37 @@ var minigame1 = {
     heads: [
         {
             class: "Head",
-            location: { x: 150, y: 0, z: 300 },
+            location: { x: 145, y: 140, z: 000 },
         },
         {
             class: "Head",
-            location: { x: 417, y: 0, z: 300 },
+            location: { x: 425, y: 140, z: 000 },
         },
         {
             class: "Head",
-            location: { x: 684, y: 0, z: 300 },
+            location: { x: 700, y: 140, z: 000 },
         },
         {
             class: "Head",
-            location: { x: 950, y: 0, z: 300 },
+            location: { x: 960, y: 140, z: 000 },
         }
     ],
     enemies: [
         {
             class: "Enemy1",
-            location: { x: 150, y: 0, z: 100 },
+            location: { x: 190, y: 0, z: 100 },
         },
         {
             class: "Enemy1",
-            location: { x: 417, y: 0, z: 100 },
+            location: { x: 470, y: 0, z: 100 },
         },
         {
             class: "Enemy1",
-            location: { x: 684, y: 0, z: 100 },
+            location: { x: 745, y: 0, z: 100 },
         },
         {
             class: "Enemy1",
-            location: { x: 950, y: 0, z: 100 },
+            location: { x: 1000, y: 0, z: 100 },
         }
     ],
     completed: false,
