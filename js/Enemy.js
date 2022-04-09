@@ -46,7 +46,7 @@ class Enemy extends Character {
             case false:
                 break
             case true:
-                if (this.app.frames % 60 == 0 && this.app.actorsDistance(this, this.chasedPlayer) < 250) {
+                if (this.app.frames % 60 == 0 && this.app.actorsDistance(this, this.chasedPlayer) < 250 && !this.isDiying) {
                     this.attack()
                 }
                 // this.actorVel = chasedPlayer.actorPos - this.actorPos
