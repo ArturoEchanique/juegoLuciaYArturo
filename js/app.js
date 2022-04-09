@@ -32,7 +32,7 @@ const BeatemApp = {
     },
     level: { name: "", type: "", index: 0 },
     audio: undefined,
-    sfxAudio: undefined,
+    sfxAudio: { instance1: undefined, instance2: undefined, index: 0 },
     bgSpeed: { x: 0, y: 0 },
     gameSize: { w: undefined, h: undefined },
     frames: 0,
@@ -67,7 +67,8 @@ const BeatemApp = {
         this.gameCompleted.instance = new Image()
         this.gameCompleted.instance.src = this.gameCompleted.source
 
-        this.sfxAudio = new Audio
+        this.sfxAudio.instance1 = new Audio
+
 
         this.drawBlackScreen()
         // this.startMinigame1()
@@ -346,13 +347,13 @@ const BeatemApp = {
     getIntroImageSrc(frame) {
         // "./images/intro/ezgif-frame-00" + this.introImage.frame + ".png"
         let imageNumber = frame
-        let prefixSrc = "./images/intro/ezgif-frame-"
+        let prefixSrc = "./images/introAnim/intro/ezgif-frame-"
         if (frame > 174) {
-            prefixSrc = "./images/intro2/ezgif-frame-"
+            prefixSrc = "./images/introAnim/intro2/ezgif-frame-"
             imageNumber = frame - 167
         }
         if (frame > 360) {
-            prefixSrc = "./images/intro3/ezgif-frame-"
+            prefixSrc = "./images/introAnim/intro3/ezgif-frame-"
             imageNumber = frame - 359
         }
         if (imageNumber < 10) imageNumber = "0" + imageNumber
@@ -452,8 +453,17 @@ const BeatemApp = {
     },
 
     playSound(source) {
-        this.sfxAudio.src = source
-        this.sfxAudio.play()
+        if (this.sfxAudio.index == 0) {
+            this.sfxAudio.instance1.src = source
+            this.sfxAudio.instance1.play()
+        }
+        else {
+            this.sfxAudio.instance2.src = source
+            this.sfxAudio2.instance2.play()
+        }
+
+
+
     },
 
     drawIntro() {
@@ -658,8 +668,10 @@ const BeatemApp = {
 
         if (actorA instanceof Player) {
 
+            let hitFound = false
             this.enemies.forEach(enemy => {
-                if (this.checkForCollision(actorA, enemy, radius)) {
+                if (this.checkForCollision(actorA, enemy, radius) && !hitFound) {
+                    hitFound = true
                     enemy.receiveDmg(dmg)
                     this.checkAlive(enemy)
                 }

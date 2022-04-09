@@ -7,6 +7,8 @@ class Player extends Character {
         this.hudImage = undefined
         this.hudMini = undefined
         this.hudPressStart = undefined
+        this.characterSpeed = 8
+
         // this.playerLives = 2
         this.playerIndex = playerIndex
         this.dirKeysPressed = { top: false, right: false, down: false, left: false }
@@ -40,6 +42,8 @@ class Player extends Character {
         this.hudPressStart = { instance: undefined, source: "./images/misc/pressStart.png" }
         this.hudPressStart.instance = new Image()
         this.hudPressStart.instance.src = this.hudPressStart.source
+
+
     }
 
     characterSelected() {
@@ -51,6 +55,12 @@ class Player extends Character {
 
     updateHudMini() {
         this.hudMini.instance.src = "./Images//hudMini/" + this.playerCharacter + ".png"
+    }
+
+    playerAttack() {
+        this.attack()
+
+
     }
 
     setMoveVelocity() {
@@ -123,7 +133,7 @@ class Player extends Character {
                     if (this.app.level.type != "minigame") this.jump()
                     break
                 case this.keys.attack:
-                    if (this.app.level.type == "level" && this.isAttacking == false) this.attack()
+                    if (this.app.level.type == "level" && this.isAttacking == false) this.playerAttack()
                     if (this.app.level.type == "character") this.app.selectCharacter(this.playerIndex)
                     break
                 case "Enter":

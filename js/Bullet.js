@@ -5,6 +5,7 @@ class Bullet extends Actor {
         this.bulletRadius = this.actorSize.w;
         this.catAudio = undefined
         this.dmg = 50
+        this.init()
 
     }
 
@@ -14,7 +15,7 @@ class Bullet extends Actor {
         this.image.instance = new Image()
         this.image.instance.src = this.image.source
         this.actorPhysics.gravity = 0;
-        this.actorVel = { x: 9, y: 0, z: 0 }
+        this.actorVel = { x: 13, y: 0, z: 0 }
 
         this.catAudio = new Audio
         this.catAudio.volume = 1

@@ -376,7 +376,7 @@ var levelsData = [
 // }
 
 //animation FRAMES
-var characterAnimData = {
+const characterAnimData = {
 
     homer: { idle: 1, walk: 8, attack: 13 },
     marge: { idle: 1, walk: 8, attack: 5 },
@@ -388,24 +388,24 @@ var characterAnimData = {
     dizzy: { idle: 5, walk: 5, attack: 3 },
 }
 
-var characterAnimSizeWData = {
+const characterAnimSizeWData = {
 
     homer: { idle: .75, walk: 0.95, attack: 1.1 },
     marge: { idle: .85, walk: .85, attack: 1.3 },
-    bart: { idle: .8, walk: 1.1, attack: 1.2 },
-    lisa: { idle: .9, walk: .85, attack: 1 },
+    bart: { idle: .7, walk: 1, attack: 1.1 },
+    lisa: { idle: .7, walk: .75, attack: 1 },
     bear: { idle: 1, walk: 1, attack: 1 },
     ball: { idle: 1, walk: 1, attack: 1 },
     krusty: { idle: 1, walk: 1, attack: 1 },
     dizzy: { idle: 1, walk: 1, attack: 1 },
 }
 
-var characterAnimSizeHData = {
+const characterAnimSizeHData = {
 
     homer: { idle: 1, walk: 1, attack: 1.1 },
     marge: { idle: 1.1, walk: 1.1, attack: 1.3 },
-    bart: { idle: 1, walk: 1.1, attack: 1.2 },
-    lisa: { idle: .95, walk: .9, attack: 1 },
+    bart: { idle: 0.9, walk: 1, attack: 1.1 },
+    lisa: { idle: .85, walk: .8, attack: .8 },
     bear: { idle: 1, walk: 1, attack: 1 },
     ball: { idle: 1, walk: 1, attack: 1 },
     krusty: { idle: 1, walk: 1, attack: 1 },
@@ -413,12 +413,12 @@ var characterAnimSizeHData = {
 }
 
 //1-5 mas o menos, se suma a la velocidad actual
-var characterAnimSpeedData = {
+const characterAnimSpeedData = {
 
-    homer: { idle: 0, walk: 0, attack: 0 },
-    marge: { idle: 0, walk: 0, attack: 0 },
-    bart: { idle: 0, walk: 0, attack: 0 },
-    lisa: { idle: 0, walk: 0, attack: 0 },
+    homer: { idle: 0, walk: 0, attack: 3 },
+    marge: { idle: 0, walk: 0, attack: 2 },
+    bart: { idle: 0, walk: 0, attack: 2 },
+    lisa: { idle: 0, walk: 0, attack: 2 },
     bear: { idle: 2, walk: 2, attack: 2 },
     ball: { idle: 2, walk: 2, attack: 2 },
     krusty: { idle: 0, walk: 0, attack: 0 },
@@ -469,7 +469,7 @@ var minigame1 = {
     spawned: false,
 }
 
-var characterSelData = {
+const characterSelData = {
     bgImage: "./images/characterSel/bg.png",
     handImage1: "./images/characterSel/handB.png",
     handImage2: "./images/characterSel/handB2.png",
@@ -497,13 +497,13 @@ var characterSelData = {
     ],
 }
 
-var transitionsData = {
+const transitionsData = {
     tvImage: "./images/transitions/tv.png",
     handImage: "./images/transitions/hand.png",
     bunnyImage: "./images/characters/bunny/walk.png",
 }
 
-var powerUps = {
+const powerUps = {
     cat: "./images/powerUps/idle.png",
     hammer: "./images/powerUps/hammer.png",
     bottle: "./images/powerUps/bottle.png",

@@ -13,7 +13,7 @@ class Actor {
         this.actorVel = { x: 0, y: 0, z: 0 }
         this.actorPhysics = { gravity: .5 }
         this.delay = { start: 0, finish: 0 }
-        this.init()
+        // this.init()
 
     }
 

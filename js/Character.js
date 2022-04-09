@@ -4,11 +4,16 @@ class Character extends Actor {
         super(app, posX, posY, posZ, width, height)
 
         this.characterSpeed = 7
-        this.characterJumpForce = 15
+        this.characterJumpForce = 13
         this.rectangleColor = "blue"
         this.characterLive = 100
         this.actorSize = { w: 300, h: 300 }
         this.characterDmg = 50
+        this.isDiying = false
+        this.canDraw = true
+
+        this.whoosh = { audio1: undefined, audio2: undefined, index: 0 }
+
         this.isAttacking = false
         this.hitImage = { instance: undefined, source: "" }
         // this.image = { instance: undefined, frameIndex: 5, totalFrames: 1, source: "", animFrameTime: 6 }
@@ -32,22 +37,41 @@ class Character extends Actor {
         this.hitImage = { instance: undefined, source: "./images/misc/hit.png" }
         this.hitImage.instance = new Image()
         this.hitImage.instance.src = this.hitImage.source
-        // this.hitAudio.pause()
+
+        this.whoosh.audio1 = new Audio
+        this.whoosh.audio1.volume = 0.9
+        this.whoosh.audio1.src = "./SFX/other/whoosh.mp3"
+
+        this.whoosh.audio2 = new Audio
+        this.whoosh.audio2.volume = 0.9
+        this.whoosh.audio2.src = "./SFX/other/whoosh.mp3"
+
+        this.hitAudio = new Audio
+        this.hitAudio.volume = .4
+
+        let randomInt = 0
+        randomInt = Math.floor(Math.random() * 3) + 1
+        this.hitAudio.src = "./SFX/" + "other/" + "punch" + randomInt + ".mp3"
+
     }
 
     draw() {
+        if (this.isDiying) {
+            if (this.app.frames % 2 == 0) this.canDraw = !this.canDraw
+        }
+        if (this.canDraw) {
+            this.app.ctx.drawImage(
+                this.image.instance,
+                (this.image.frameIndex) * (this.image.instance.width / this.image.totalFrames),
+                0,
+                this.image.instance.width / this.image.totalFrames,
+                this.image.instance.height,
+                this.getDrawPosX(),
+                this.getDrawPosY(),
+                this.actorSize.w * characterAnimSizeWData[this.playerCharacter][this.state],
+                this.actorSize.h * characterAnimSizeHData[this.playerCharacter][this.state])
+        }
 
-
-        this.app.ctx.drawImage(
-            this.image.instance,
-            (this.image.frameIndex) * (this.image.instance.width / this.image.totalFrames),
-            0,
-            this.image.instance.width / this.image.totalFrames,
-            this.image.instance.height,
-            this.getDrawPosX(),
-            this.getDrawPosY(),
-            this.actorSize.w * characterAnimSizeWData[this.playerCharacter][this.state],
-            this.actorSize.h * characterAnimSizeHData[this.playerCharacter][this.state])
         this.tryDrawDamage()
         this.animate(this.app.frames)
         this.move()
@@ -86,6 +110,15 @@ class Character extends Actor {
             if (this.weaponLevel === 0) {
                 let radius = 150
                 this.app.tryHit(this, this.characterDmg, radius)
+                if (this.whoosh.index == 0) {
+                    this.whoosh.audio1.play()
+                    this.whoosh.index = 1
+                }
+                else {
+                    this.whoosh.audio2.play()
+                    this.whoosh.index = 0
+                }
+
             }
             else {
                 for (let i = 0; i < this.weaponLevel; i++) {
@@ -110,7 +143,7 @@ class Character extends Actor {
 
     startEstheticDmg() {
         this.delay.start = this.app.frames
-        this.delay.end = this.app.frames + this.app.fps * 0.1
+        this.delay.end = this.app.frames + this.app.fps * 0.125
     }
 
     tryDrawDamage() {
@@ -134,7 +167,20 @@ class Character extends Actor {
 
 
     die() {
-        this.isAlive = false
+        this.isDiying = true
+        let dieFrame = 0
+
+        setTimeout(() => {
+            this.isAlive = false
+            console.log("died")
+        }, 600);
+
+        if (this.isDiying) {
+
+            if (this.app.frames % 100 == 0) this.canDraw = !this.canDraw
+
+        }
+
         // de momento aqui
     }
 

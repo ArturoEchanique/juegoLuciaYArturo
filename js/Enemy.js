@@ -29,13 +29,13 @@ class Enemy extends Character {
     }
 
     setHitSound() {
-        this.hitAudio = new Audio
-        this.hitAudio.volume = 1
-        // let randomInt = Math.floor(Math.random() * 2)
-        let randomInt = 0
-        if (Math.random() > 0.5) randomInt = 1
-        else randomInt = 2
-        this.hitAudio.src = "./SFX/" + "other" + "/hit" + 2 + ".wav"
+        // this.hitAudio = new Audio
+        // this.hitAudio.volume = 1
+        // // let randomInt = Math.floor(Math.random() * 2)
+        // let randomInt = 0
+        // if (Math.random() > 0.5) randomInt = 1
+        // else randomInt = 2
+        // this.hitAudio.src = "./SFX/" + "other" + "/hit" + 2 + ".wav"
     }
 
 
@@ -55,10 +55,10 @@ class Enemy extends Character {
     }
 
     setMoveVelocity() {
-        switch (this.isChasing) {
+        switch (this.isChasing && !this.isDiying) {
 
 
-            case false:
+            case this.actorVel = { x: 0, y: 0, z: 0 }:
                 break
             case true:
                 //harcoded
@@ -95,7 +95,6 @@ class Enemy extends Character {
         else if (this.app.level.name == "minigame2") this.playSlapMinigame()
         this.setAttackBehaviour()
         this.updateAnimState()
-        console.log(this.isChasing)
 
     }
 
@@ -117,13 +116,15 @@ class Enemy extends Character {
 class Enemy1 extends Enemy {
 
     constructor(app, posX, posY, posZ, width, height) {
-        super(app, posX, posY, posZ, width, height)
+        super(app, posX, posY, posZ)
+
+        this.actorSize = { w: 325, h: 325 }
         this.playerCharacter = "dizzy"
 
         this.rectangleColor = "purple"
         this.characterSpeed = Math.random() * 1.5 + 3
 
-        this.characterLive = 50
+        this.characterLive = 60
     }
 
 }
