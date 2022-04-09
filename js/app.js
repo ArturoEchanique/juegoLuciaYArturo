@@ -343,18 +343,20 @@ const BeatemApp = {
         this.introImage.instance = new Image()
         // this.introImage.instance.src = this.getIntroImageSrc()
     },
+    // 4, 376251
+    // 21, 639997
 
     getIntroImageSrc(frame) {
         // "./images/intro/ezgif-frame-00" + this.introImage.frame + ".png"
         let imageNumber = frame
-        let prefixSrc = "./images/introAnim/intro/ezgif-frame-"
-        if (frame > 174) {
-            prefixSrc = "./images/introAnim/intro2/ezgif-frame-"
+        let prefixSrc = "./images/introAnim/introP1/ezgif-frame-"
+        if (frame > 167) {
+            prefixSrc = "./images/introAnim/introP2/ezgif-frame-"
             imageNumber = frame - 167
         }
-        if (frame > 360) {
-            prefixSrc = "./images/introAnim/intro3/ezgif-frame-"
-            imageNumber = frame - 359
+        if (frame > 348) {
+            prefixSrc = "./images/introAnim/introP3/ezgif-frame-"
+            imageNumber = frame - 348
         }
         if (imageNumber < 10) imageNumber = "0" + imageNumber
         if (imageNumber < 100) imageNumber = "0" + imageNumber
