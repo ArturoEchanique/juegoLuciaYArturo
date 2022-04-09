@@ -70,7 +70,7 @@ const BeatemApp = {
         this.sfxAudio = new Audio
 
         this.drawBlackScreen()
-        // this.launchLevel(5)
+        // this.startMinigame1()
 
 
     },

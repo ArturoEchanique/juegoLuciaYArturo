@@ -197,7 +197,7 @@ class Player extends Character {
         this.app.ctx.drawImage(this.hudMini.instance, (this.app.gameSize.w / 4) * (this.playerIndex), 0, 100, 100)
 
         this.app.ctx.fillStyle = "white"
-        this.app.ctx.font = '40px serif'
+        this.app.ctx.font = 'Bold 40px serif'
         this.app.ctx.fillText(this.characterLive, 235 + (this.app.gameSize.w / 4) * (this.playerIndex), 73)
 
 
