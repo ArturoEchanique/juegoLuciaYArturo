@@ -85,9 +85,8 @@ class CharacterSelection {
         else if (playerIndex == 1 && this.playersDone.two == false) {
             if ((this.hand2Position + direction + 4) % 4 == this.hand1Position) direction *= 2
             this.hand2Position = (this.hand2Position + direction + 4) % 4
-
-
         }
+        this.app.playSound("./SFX/other/select.mp3")
     }
 
     startSelectionDelay() {

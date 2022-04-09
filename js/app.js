@@ -68,6 +68,7 @@ const BeatemApp = {
         this.gameCompleted.instance.src = this.gameCompleted.source
 
         this.sfxAudio.instance1 = new Audio
+        this.sfxAudio.instance2 = new Audio
 
 
         this.drawBlackScreen()
@@ -90,6 +91,24 @@ const BeatemApp = {
 
         this.characterSelection.hand2Position = 0
         while (this.characterSelection.hand2Position == this.characterSelection.hand1Position) this.characterSelection.hand2Position++
+
+    },
+
+    addPlayer2InGame() {
+        this.createPlayer()
+        if (!this.player2alreadyAdded) {
+            this.players[this.players.length - 1].setEventHandlers()
+            this.player2alreadyAdded = true
+        }
+        this.players[this.players.length - 1].actorPos.x = this.bgPosition.x + 400
+
+        this.characterSelection.hand2Position = 0
+        while (this.characterSelection.hand2Position == this.characterSelection.hand1Position) this.characterSelection.hand2Position++
+        this.characterSelection.playSelectedAudio(this.players[this.players.length - 1].playerCharacter)
+
+        // this.players.forEach(player => player.actorPos = { x: 0, y: 0, z: 0 })
+        // this.bgPosition.x = 0
+
     },
 
     setDimensions() {
@@ -103,7 +122,7 @@ const BeatemApp = {
 
     //entra un parametro opcional, que fuerza a cargar un nivel, si no, carga el próximo nivel
     launchNextLevel() {
-        this.players.forEach(player => player.actorPos = { x: 0, y: 0, z: 0 })
+        this.players.forEach(player => player.actorPos = { x: 100 + this.players.indexOf(player) * 200, y: 0, z: 0 })
         this.bgPosition.x = 0
 
         for (let i = 0; i < levelsData.length; i++) {
@@ -170,7 +189,7 @@ const BeatemApp = {
         this.currentInterval = setInterval(() => {
             this.clearAll()
             this.collectGarbage()
-            this.drawLevel1()
+            this.drawLevel()
             this.manageFrames()
             this.drawFrame()
             this.checkBulletsCollisions()
@@ -178,6 +197,7 @@ const BeatemApp = {
             this.readLevelData()
             if (this.gameCompleted.enabled == false) this.checkGameCompleted()
             else this.execDelayLaunchNextLevel()
+            if (this.players.length == 0 && this.gameOver.enabled == false) this.showGameOver()
 
             // if (this.frames % 300 == 20) this.createEnemy()
         }, 1000 / this.fps)
@@ -193,7 +213,7 @@ const BeatemApp = {
         this.currentInterval = setInterval(() => {
             this.clearAll()
             this.collectGarbage()
-            this.drawLevel1()
+            this.drawLevel()
             this.manageFrames()
             this.drawFrame()
             this.checkBulletsCollisions()
@@ -201,6 +221,7 @@ const BeatemApp = {
             this.readLevelData()
             if (this.gameCompleted.enabled == false) this.checkGameCompleted()
             else this.execDelayLaunchNextLevel()
+            if (this.players.length == 0 && this.gameOver.enabled == false) this.showGameOver()
 
             // if (this.frames % 300 == 20) this.createEnemy()
         }, 1000 / this.fps)
@@ -458,10 +479,12 @@ const BeatemApp = {
         if (this.sfxAudio.index == 0) {
             this.sfxAudio.instance1.src = source
             this.sfxAudio.instance1.play()
+            this.sfxAudio.index = 1
         }
         else {
             this.sfxAudio.instance2.src = source
-            this.sfxAudio2.instance2.play()
+            this.sfxAudio.instance2.play()
+            this.sfxAudio.index = 1
         }
 
 
@@ -498,23 +521,19 @@ const BeatemApp = {
         // this.characterSelEntries.forEach(entry => entry.draw())
     },
 
-    drawLevel1() {
+    drawLevel() {
         if (this.players.length > 0) this.updateBgSpeed()
 
         this.background.draw()
-        this.players.forEach(player => player.draw())
         this.drawBullets()
+        this.players.forEach(player => player.draw())
+
         this.drawEnemies()
         this.drawPowerUps()
         this.tryDrawGameOver()
         this.tryDrawGameCompleted()
     },
 
-    drawLevel2() {
-
-        this.players.forEach(player => player.draw())
-        this.createEnemies(level1[i].enemies)
-    },
 
     drawMinigame1() {
         this.ctx.drawImage(this.minigameBg.instance, 0, 0, this.gameSize.w, this.gameSize.h)
@@ -630,6 +649,7 @@ const BeatemApp = {
     collectGarbage() {
         this.bullets = this.bullets.filter(bullet => bullet.getDrawPosX() > (0 - bullet.actorSize.w) && bullet.getDrawPosX() <= this.gameSize.w)
         this.enemies = this.enemies.filter(enemy => enemy.isAlive)
+        this.players = this.players.filter(player => player.isAlive)
         // comprueba si no hay enemigos, y en ese caso, permite avanzar al jugador
     },
 
@@ -800,8 +820,10 @@ const BeatemApp = {
     },
 
     killPlayer(player) {
-        this.players.splice(this.players.indexOf(player), 1)
-        if (this.players.length == 0) this.showGameOver()
+        this.playSound(`./SFX/${player.playerCharacter}/02.mp3`)
+        player.die()
+        // this.players.splice(this.players.indexOf(player), 1)
+        // if (this.players.length == 0) this.showGameOver()
     },
 
     findNearestPlayer(actor1) {
@@ -822,13 +844,17 @@ const BeatemApp = {
 
     selectCharacter(playerIndex) {
 
-        this.characterSelection.selectCharacter(playerIndex)
-        let hand = undefined
-        if (playerIndex == 0) hand = this.characterSelection.hand1Position
-        else hand = this.characterSelection.hand2Position
-        this.players[playerIndex].playerCharacter = characterSelData.characters[hand].character
-        this.characterSelection.playSelectedAudio(characterSelData.characters[hand].character)
-        this.players[playerIndex].characterSelected()
+        if (playerIndex == 0 && !this.characterSelection.playersDone.one || playerIndex == 1 && !this.characterSelection.playersDone.two) {
+            console.log("entering again")
+            this.characterSelection.selectCharacter(playerIndex)
+            let hand = undefined
+            if (playerIndex == 0) hand = this.characterSelection.hand1Position
+            else hand = this.characterSelection.hand2Position
+            this.players[playerIndex].playerCharacter = characterSelData.characters[hand].character
+            this.characterSelection.playSelectedAudio(characterSelData.characters[hand].character)
+            this.players[playerIndex].characterSelected()
+        }
+
         // console.log(this.players[playerIndex].playerCharacter)
     },
 

@@ -3,7 +3,7 @@ class Player extends Character {
     constructor(app, posX, posY, posZ, width, height, keys, playerIndex) {
         super(app, posX, posY, posZ, width, height)
         this.keys = keys
-        this.characterLive = 500
+        this.characterLive = 300
         this.hudImage = undefined
         this.hudMini = undefined
         this.hudPressStart = undefined
@@ -14,7 +14,7 @@ class Player extends Character {
         this.dirKeysPressed = { top: false, right: false, down: false, left: false }
         this.rectangleColor = "yellow"
 
-
+        this.initPlayer()
         //temporal
 
 
@@ -27,7 +27,17 @@ class Player extends Character {
     //     this.image.instance = new Image()
     //     this.image.instance.src = this.image.source
 
+    initPlayer() {
+        this.app.players.forEach(player => {
+            if (player !== this) {
+                while (player.playerCharacter === this.playerCharacter) {
+                    this.playerCharacter = playableCharacters[(playableCharacters.indexOf(this.playerCharacter) + 1) % playableCharacters.length]
+                }
+            }
+        })
 
+
+    }
     // }
 
     initHud() {
@@ -37,12 +47,12 @@ class Player extends Character {
 
         this.hudMini = { instance: undefined, source: "" }
         this.hudMini.instance = new Image()
-        this.hudMini.instance.src = this.hudMini.source
+        // this.hudMini.instance.src = this.hudMini.source
 
         this.hudPressStart = { instance: undefined, source: "./images/misc/pressStart.png" }
         this.hudPressStart.instance = new Image()
         this.hudPressStart.instance.src = this.hudPressStart.source
-
+        this.updateHudMini()
 
     }
 
@@ -83,6 +93,8 @@ class Player extends Character {
                     this.actorVel.x = -1 * this.characterSpeed
                 }
                 else this.actorVel.x = 0
+                if (this.getDrawPosX() < this.app.gameSize.w * 0) this.actorVel.x = this.characterSpeed
+                else if (this.getDrawPosX() > this.app.gameSize.w * 1.04 - this.actorSize.w) this.actorVel.x = -1 * this.characterSpeed
 
                 //Z AXIS
                 if (this.dirKeysPressed.top && !this.dirKeysPressed.down) this.actorVel.z = 1 * this.characterSpeed
@@ -143,6 +155,7 @@ class Player extends Character {
                         this.app.returnToCharacterSel()
                     }
                     else if (this.app.level.type == "character" && this.app.players.length < 2) this.app.addPlayer2()
+                    else if (this.app.level.type == "level" && this.app.players.length < 2) this.app.addPlayer2InGame()
                     else if (this.app.level.type == "intro") this.app.launchNextLevel()
                     console.log("ENTER PRESSED")
                     break
@@ -189,8 +202,7 @@ class Player extends Character {
         }
         else this.actorPos.z += this.actorVel.z
 
-        if (this.getDrawPosX() < this.app.gameSize.w * 0) this.actorPos.x += this.characterSpeed
-        else if (this.getDrawPosX() > this.app.gameSize.w * 1.04 - this.actorSize.w) this.actorPos.x -= this.characterSpeed
+
     }
 
     drawHud() {

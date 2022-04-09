@@ -510,3 +510,7 @@ const powerUps = {
     plant: "./images/powerUps/plant.png",
 
 }
+
+const playableCharacters = [
+    "homer", "marge", "bart", "lisa"
+]

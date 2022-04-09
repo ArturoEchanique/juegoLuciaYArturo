@@ -237,7 +237,7 @@ class Character extends Actor {
 
     updateAnimState() {
         if (!this.isAttacking) {
-            const a = this.actorVel.x
+            const a = this.actorVel.x + this.app.bgSpeed.x
             const b = this.actorVel.y
             const c = this.actorVel.z
             if (Math.abs(a * a + b * b + c * c) > 0) {
