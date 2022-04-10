@@ -843,7 +843,7 @@ const BeatemApp = {
             }
 
             maxPlayer.actorHead.resultsImage.enabled = true
-            if (rank == 1) maxPlayer.characterLive = 500
+            if (rank == 1) maxPlayer.characterLive += 100
             maxPlayer.actorHead.resultsImage.instance.src = "./images/minigame/" + rank + ".png"
             arr.splice(arr.indexOf(maxPlayer), 1)
         }
