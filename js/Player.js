@@ -226,7 +226,7 @@ class Player extends Character {
     }
 
     tick() {
-        if (this.app.level.type == "level") this.drawHud()
+        // if (this.app.level.type == "level") this.drawHud()
         this.updateAnimState()
     }
 
