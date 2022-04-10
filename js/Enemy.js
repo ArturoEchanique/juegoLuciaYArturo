@@ -76,14 +76,14 @@ class Enemy extends Character {
     }
 
     playBallonMinigame() {
-        if (this.app.frames % (Math.floor(Math.random() * 35)) == 0) {
+        if (this.app.frames % (Math.floor(Math.random() * 40)) == 0) {
             this.blowBalloon()
 
         }
     }
 
     playSlapMinigame() {
-        if (this.app.frames % (Math.floor(Math.random() * 35)) == 0) {
+        if (this.app.frames % (Math.floor(Math.random() * 40)) == 0) {
             this.slapHead()
         }
     }

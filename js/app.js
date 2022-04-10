@@ -436,35 +436,47 @@ const BeatemApp = {
             this.players[i].actorSize = { w: 300, h: 300 }
             this.players[i].changeState("blow")
         }
-        for (let i = 0; i < 4; i++) {
-            if (this.players[i]) {
-
-            }
-            else {
-                let arr = [...this.players]
-                arr.push(...this.enemies)
-                const newEnemy = this.createEnemy(minigame1.enemies[i])
-                newEnemy.actorHead = this.createHead(minigame1.heads[i])
-                newEnemy.playerCharacter = "bart"
-                arr.forEach(player => {
-                    if (true) {
-                        while (player.playerCharacter === newEnemy.playerCharacter) {
-                            newEnemy.playerCharacter = playableCharacters[(playableCharacters.indexOf(newEnemy.playerCharacter) + 1) % playableCharacters.length]
-                        }
-                    }
-                })
-                newEnemy.actorHead.image.instance.src = "./images/minigame/" + newEnemy.playerCharacter + ".png"
-                newEnemy.actorSize = { w: 300, h: 300 }
-                newEnemy.actorPos.z = 30
-                newEnemy.actorPos.y = 0
-                newEnemy.actorPos.x = 250 * i + 180
-                newEnemy.actorHead.bluePos.x = 250 * i + 180
-                newEnemy.actorHead.bluePos.y = 602
-                newEnemy.changeState("blow")
-
-
-            }
+        let characterArr = ["homer", "lisa", "marge", "bart"]
+        this.players.forEach(player => {
+            if (characterArr.indexOf(player.playerCharacter) != -1) characterArr.splice(characterArr.indexOf(player.playerCharacter), 1)
+        })
+        for (let i = 4 - characterArr.length; i < 4; i++) {
+            const newEnemy = this.createEnemy(minigame1.enemies[i])
+            newEnemy.actorHead = this.createHead(minigame1.heads[i])
+            newEnemy.playerCharacter = characterArr[i - (4 - characterArr.length)]
+            newEnemy.actorHead.image.instance.src = "./images/minigame/" + newEnemy.playerCharacter + ".png"
+            newEnemy.actorSize = { w: 300, h: 300 }
+            newEnemy.actorPos.z = 30
+            newEnemy.actorPos.y = 0
+            newEnemy.actorPos.x = 250 * i + 180
+            newEnemy.actorHead.bluePos.x = 250 * i + 180
+            newEnemy.actorHead.bluePos.y = 602
+            newEnemy.changeState("blow")
         }
+        // for (let i = 0; i < 4; i++) {
+        //     let arr = [...this.players]
+        //     arr.push(...this.enemies)
+        //     const newEnemy = this.createEnemy(minigame1.enemies[i])
+        //     newEnemy.actorHead = this.createHead(minigame1.heads[i])
+        //     newEnemy.playerCharacter = "bart"
+
+
+        //     arr.forEach(player => {
+        //         if (true) {
+        //             while (player.playerCharacter === newEnemy.playerCharacter) {
+        //                 newEnemy.playerCharacter = playableCharacters[(playableCharacters.indexOf(newEnemy.playerCharacter) + 1) % playableCharacters.length]
+        //             }
+        //         }
+        //     })
+        //     newEnemy.actorHead.image.instance.src = "./images/minigame/" + newEnemy.playerCharacter + ".png"
+        //     newEnemy.actorSize = { w: 300, h: 300 }
+        //     newEnemy.actorPos.z = 30
+        //     newEnemy.actorPos.y = 0
+        //     newEnemy.actorPos.x = 250 * i + 180
+        //     newEnemy.actorHead.bluePos.x = 250 * i + 180
+        //     newEnemy.actorHead.bluePos.y = 602
+        //     newEnemy.changeState("blow")
+        // }
         // for (let i = 0; i < 4; i++) {
         //     this.createHead(minigame1.heads[i])
         // }
