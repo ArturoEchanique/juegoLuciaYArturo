@@ -420,7 +420,7 @@ const characterAnimSizeHData = {
 //-5 +5 mas o menos, se suma a la velocidad actual
 const characterAnimSpeedData = {
 
-    homer: { idle: 0, walk: 0, attack: 4, blow: 0 },
+    homer: { idle: 0, walk: 0, attack: 3, blow: 0 },
     marge: { idle: 0, walk: 0, attack: 2, blow: 0 },
     bart: { idle: 0, walk: 0, attack: 2, blow: 0 },
     lisa: { idle: 0, walk: 0, attack: 2, blow: 0 },

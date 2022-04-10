@@ -183,7 +183,7 @@ class Enemy4 extends Enemy {
 
     constructor(app, posX, posY, posZ, width, height) {
         super(app, posX, posY, posZ, width, height)
-        this.actorSize = { w: 300, h: 300 }
+        this.actorSize = { w: 400, h: 400 }
         this.enemySize = { w: width, h: height }
         this.playerCharacter = "krusty"
         this.characterDmg = 40
