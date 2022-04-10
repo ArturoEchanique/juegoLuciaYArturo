@@ -181,8 +181,10 @@ class Character extends Actor {
         let dieFrame = 0
 
         setTimeout(() => {
+            if (this.app.enemies.length == 1) this.app.enemiesLastAlive = this.app.frames
             this.isAlive = false
             console.log("died")
+
         }, 600);
 
         if (this.isDiying) {

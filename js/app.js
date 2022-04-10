@@ -18,6 +18,7 @@ const BeatemApp = {
     introImagePre: { instance: undefined, frame: 7, totalFrames: 300 },
     introImage: { instance: undefined, frame: 7, totalFrames: 300 },
     minigameBg: { instance: undefined, source: "./images/minigame/bg2.png" },
+    hurryImage: { instance: undefined, source: "./images/misc/hurry.png", enabled: false },
     startButton: { instance: undefined, source: "./images/misc/pressEnter.png" },
     minigameEnded: false,
 
@@ -34,8 +35,10 @@ const BeatemApp = {
     },
     level: { name: "", type: "", index: 0 },
     audio: undefined,
-    sfxAudio: { instance1: undefined, instance2: undefined, index: 0 },
+    sfxAudio: { instance1: undefined, instance2: undefined, instance3: undefined, instance4: undefined, index: 0 },
     bgSpeed: { x: 0, y: 0 },
+    bgLastMovement: 0,
+    enemiesLastAlive: 0,
     gameSize: { w: undefined, h: undefined },
     frames: 0,
     playerKeys: [{ jump: " ", top: "ArrowUp", right: "ArrowRight", down: "ArrowDown", left: "ArrowLeft", attack: "m" },
@@ -75,8 +78,13 @@ const BeatemApp = {
         this.gameCompleted.instance = new Image()
         this.gameCompleted.instance.src = this.gameCompleted.source
 
+        this.hurryImage.instance = new Image()
+        this.hurryImage.instance.src = this.hurryImage.source
+
         this.sfxAudio.instance1 = new Audio
         this.sfxAudio.instance2 = new Audio
+        this.sfxAudio.instance3 = new Audio
+        this.sfxAudio.instance4 = new Audio
 
 
         // this.drawBlackScreen()
@@ -212,7 +220,7 @@ const BeatemApp = {
         // this.level.type = "level"
 
         this.createLevel1()
-
+        this.bgLastMovement = this.frames
         this.currentInterval = setInterval(() => {
             this.clearAll()
             this.collectGarbage()
@@ -236,7 +244,7 @@ const BeatemApp = {
         // this.level.type = "level"
 
         this.createLevel2()
-
+        this.bgLastMovement = this.frames
         this.currentInterval = setInterval(() => {
             this.clearAll()
             this.collectGarbage()
@@ -547,10 +555,20 @@ const BeatemApp = {
             this.sfxAudio.instance1.play()
             this.sfxAudio.index = 1
         }
-        else {
+        else if (this.sfxAudio.index == 1) {
             this.sfxAudio.instance2.src = source
             this.sfxAudio.instance2.play()
-            this.sfxAudio.index = 1
+            this.sfxAudio.index = 2
+        }
+        else if (this.sfxAudio.index == 2) {
+            this.sfxAudio.instance3.src = source
+            this.sfxAudio.instance3.play()
+            this.sfxAudio.index = 3
+        }
+        else if (this.sfxAudio.index == 3) {
+            this.sfxAudio.instance4.src = source
+            this.sfxAudio.instance4.play()
+            this.sfxAudio.index = 0
         }
 
 
@@ -593,9 +611,9 @@ const BeatemApp = {
         this.background.draw()
         this.drawBullets()
         this.players.forEach(player => player.draw())
-
         this.drawEnemies()
         this.drawPowerUps()
+        this.DrawHurryUp()
         this.tryDrawGameOver()
         this.tryDrawGameCompleted()
     },
@@ -703,6 +721,7 @@ const BeatemApp = {
         this.enemies.forEach(enemy => {
             enemy.draw()
         })
+        if (this.enemies.length != 0) this.enemiesLastAlive = this.frames
     },
 
     drawPowerUps() {
@@ -715,6 +734,7 @@ const BeatemApp = {
     collectGarbage() {
         this.bullets = this.bullets.filter(bullet => bullet.getDrawPosX() > (0 - bullet.actorSize.w) && bullet.getDrawPosX() <= this.gameSize.w)
         this.enemies = this.enemies.filter(enemy => enemy.isAlive)
+
         this.players = this.players.filter(player => player.isAlive)
         // comprueba si no hay enemigos, y en ese caso, permite avanzar al jugador
     },
@@ -867,6 +887,26 @@ const BeatemApp = {
         return distance
     },
 
+    DrawHurryUp() {
+        if (this.level.type == "level" && this.frames > this.bgLastMovement + 240 && this.frames > this.enemiesLastAlive + 240) {
+
+            if (this.frames % 40 == 0) {
+                this.hurryImage.enabled = !this.hurryImage.enabled
+                this.playSound("./SFX/other/ding.mp3")
+            }
+        }
+        else this.hurryImage.enabled = false
+        if (this.hurryImage.enabled == true) {
+            this.ctx.drawImage(
+                this.hurryImage.instance,
+                this.gameSize.w - 300,
+                this.gameSize.h / 2.3 - 200,
+                250,
+                330)
+        }
+
+    },
+
     //convendria que comprobase no solo el player 1 sino un compendio de todos
     updateBgSpeed() {
 
@@ -876,6 +916,7 @@ const BeatemApp = {
         }
         else if (this.players[0].getDrawPosX() >= this.gameSize.w * 0.575 && this.bgPosition.x < this.bgBounds.x - this.bgBounds.y * 1.45) {
             if (this.players[0].actorVel.x > 0) {
+                this.bgLastMovement = this.frames
                 this.bgSpeed.x = this.players[0].actorVel.x
                 this.bgPosition.x += this.bgSpeed.x
             }
@@ -886,6 +927,7 @@ const BeatemApp = {
         }
         else if (this.players[0].getDrawPosX() <= this.gameSize.w * 0.2 && this.bgPosition.x > 6) {
             if (this.players[0].actorVel.x < 0) {
+                this.bgLastMovement = this.frames
                 this.bgSpeed.x = this.players[0].actorVel.x
                 this.bgPosition.x += this.bgSpeed.x
             }

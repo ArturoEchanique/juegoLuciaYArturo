@@ -52,7 +52,7 @@ class Head extends Actor {
             this.app.ctx.drawImage(
                 this.resultsImage.instance,
                 this.bluePos.x - 110,
-                200,
+                140,
                 340,
                 85)
         }
