@@ -377,9 +377,9 @@ const BeatemApp = {
         this.characterSelection = new CharacterSelection(this)
     },
 
-    setDelayLaunchNextLevel() {
+    setDelayLaunchNextLevel(seconds) {
         this.delay.start = this.frames
-        this.delay.end = this.frames + this.fps * 3
+        this.delay.end = this.frames + this.fps * seconds
     },
 
     execDelayLaunchNextLevel() {
@@ -848,7 +848,7 @@ const BeatemApp = {
             arr.splice(arr.indexOf(maxPlayer), 1)
         }
         this.gameCompleted.enabled = true
-        this.setDelayLaunchNextLevel()
+        this.setDelayLaunchNextLevel(4)
 
 
     },
@@ -1033,7 +1033,7 @@ const BeatemApp = {
         // levelFinished = true
         if (levelFinished) {
             this.showCompleted()
-            this.setDelayLaunchNextLevel()
+            this.setDelayLaunchNextLevel(3)
             return true
         }
         else return false
