@@ -64,7 +64,7 @@ class Player extends Character {
     }
 
     updateHudMini() {
-        this.hudMini.instance.src = "./Images/hudMini/" + this.playerCharacter + ".png"
+        this.hudMini.instance.src = "./images/hudMini/" + this.playerCharacter + ".png"
     }
 
     playerAttack() {
@@ -226,7 +226,7 @@ class Player extends Character {
     }
 
     tick() {
-        // if (this.app.level.type == "level") this.drawHud()
+        if (this.app.level.type == "level") this.drawHud()
         this.updateAnimState()
     }
 
