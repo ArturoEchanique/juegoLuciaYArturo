@@ -235,6 +235,9 @@ class Character extends Actor {
 
     animate(framesCounter) {
 
+        if (this.app.level.type == "level") {
+            this.stopAnimation = false
+        }
         if (!this.stopAnimation && framesCounter % (this.image.animFrameTime - characterAnimSpeedData[this.playerCharacter][this.state]) == 0) {
 
             this.image.frameIndex++;

@@ -155,7 +155,7 @@ class Player extends Character {
                         this.app.returnToCharacterSel()
                     }
                     else if (this.app.level.type == "character" && this.app.players.length < 2) this.app.addPlayer2()
-                    else if (this.app.level.type == "level" && this.app.players.length < 2) this.app.addPlayer2InGame()
+                    else if (this.app.level.type == "level" && this.app.players.length < 2 && !this.app.player2alreadyAdded) this.app.addPlayer2InGame()
                     else if (this.app.level.type == "intro") this.app.launchNextLevel()
                     console.log("ENTER PRESSED")
                     break
@@ -208,7 +208,7 @@ class Player extends Character {
     drawHud() {
 
 
-        if (this.playerIndex == 0) {
+        if (this == this.app.players[0]) {
             this.app.ctx.drawImage(this.hudPressStart.instance, (this.app.gameSize.w / 4) * 2, 0, this.app.gameSize.w / 4, 100)
             this.app.ctx.drawImage(this.hudPressStart.instance, (this.app.gameSize.w / 4) * 3, 0, this.app.gameSize.w / 4, 100)
             if (this.app.players.length == 1) {

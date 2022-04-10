@@ -65,7 +65,7 @@ var levelsData = [
                         location: undefined,
                     },
                     {
-                        class: "Enemy2",
+                        class: "Enemy1",
                         location: undefined,
                     },
                     {
@@ -90,7 +90,7 @@ var levelsData = [
                         location: undefined,
                     },
                     {
-                        class: "Enemy2",
+                        class: "Enemy1",
                         location: undefined,
                     },
                     {
@@ -116,7 +116,7 @@ var levelsData = [
                         location: undefined,
                     },
                     {
-                        class: "Enemy2",
+                        class: "Enemy1",
                         location: undefined,
                     },
                     {
@@ -164,8 +164,8 @@ var levelsData = [
         started: false,
         completed: false,
         content: {
-            stageNumber: "STAGE 2",
-            stageName: "            KRUSTYLAND",
+            stageNumber: "BONUS",
+            stageName: "    BLOW THE BALLOON",
         }
 
     },
@@ -180,9 +180,14 @@ var levelsData = [
     {
         name: "transition3",
         type: "transition",
-        music: "./music/intro.mp3",
+        music: "./music/transition.mp3",
         started: false,
         completed: false,
+        content: {
+            stageNumber: "STAGE 2",
+            stageName: "            KRUSTYLAND",
+        }
+
 
     },
     {
@@ -224,7 +229,7 @@ var levelsData = [
                         location: undefined,
                     },
                     {
-                        class: "Enemy2",
+                        class: "Enemy1",
                         location: undefined,
                     },
                     {
@@ -249,7 +254,7 @@ var levelsData = [
                         location: undefined,
                     },
                     {
-                        class: "Enemy2",
+                        class: "Enemy1",
                         location: undefined,
                     },
                     {
@@ -274,7 +279,7 @@ var levelsData = [
                         location: undefined,
                     },
                     {
-                        class: "Enemy2",
+                        class: "Enemy1",
                         location: undefined,
                     },
                     {
@@ -316,7 +321,7 @@ var levelsData = [
                         location: undefined,
                     },
                     {
-                        class: "Enemy3",
+                        class: "Enemy4",
                         location: undefined,
                     }
                 ],
@@ -415,7 +420,7 @@ const characterAnimSizeHData = {
 //-5 +5 mas o menos, se suma a la velocidad actual
 const characterAnimSpeedData = {
 
-    homer: { idle: 0, walk: 0, attack: 3, blow: 0 },
+    homer: { idle: 0, walk: 0, attack: 4, blow: 0 },
     marge: { idle: 0, walk: 0, attack: 2, blow: 0 },
     bart: { idle: 0, walk: 0, attack: 2, blow: 0 },
     lisa: { idle: 0, walk: 0, attack: 2, blow: 0 },

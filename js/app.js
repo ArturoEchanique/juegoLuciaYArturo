@@ -121,13 +121,14 @@ const BeatemApp = {
         this.canvasNode.setAttribute('height', this.gameSize.h)
     },
 
-    //entra un parametro opcional, que fuerza a cargar un nivel, si no, carga el próximo nivel
     launchNextLevel() {
+        console.log("trylaunching next level")
         this.players.forEach(player => player.actorPos = { x: 100 + this.players.indexOf(player) * 200, y: 0, z: 0 })
         this.bgPosition.x = 0
 
         for (let i = 0; i < levelsData.length; i++) {
             if (levelsData[i].started == false) {
+                console.log("we will launch", i, "level")
                 this.launchLevel(i)
                 break
             }
@@ -143,6 +144,9 @@ const BeatemApp = {
         this.level.name = levelsData[index].name
         this.level.type = levelsData[index].type
         this.level.index = index
+        this.enemies = []
+        this.players.forEach(player => player.state = "idle")
+
 
         clearInterval(this.currentInterval)
         switch (index) {
@@ -158,10 +162,9 @@ const BeatemApp = {
                 break
             case 5: this.startMinigame1()
                 break
-            //de momento
-            case 9: this.startMinigame2()
+            case 6: this.startTransition()
                 break
-            case 5: this.startLevel2()
+            case 7: this.startLevel2()
                 break
         }
         levelsData[index].started = true
@@ -240,6 +243,7 @@ const BeatemApp = {
             this.drawMinigame1()
             this.manageFrames()
             this.drawFrame()
+            if (this.gameCompleted.enabled) this.execDelayLaunchNextLevel()
 
             // if (this.frames % 300 == 20) this.createEnemy()
         }, 1000 / this.fps)
@@ -422,6 +426,7 @@ const BeatemApp = {
         // this.createPlayer()
         for (let i = 0; i < this.players.length; i++) {
             this.players[i].actorPos.x = 220 * i + 190
+            this.players[i].actorPos.y = 0
             this.players[i].actorPos.z = 30
             this.players[i].actorHead = this.createHead(minigame1.heads[i])
             this.players[i].actorHead.image.instance.src = "./images/minigame/" + this.players[i].playerCharacter + ".png"
@@ -451,6 +456,7 @@ const BeatemApp = {
                 newEnemy.actorHead.image.instance.src = "./images/minigame/" + newEnemy.playerCharacter + ".png"
                 newEnemy.actorSize = { w: 300, h: 300 }
                 newEnemy.actorPos.z = 30
+                newEnemy.actorPos.y = 0
                 newEnemy.actorPos.x = 250 * i + 180
                 newEnemy.actorHead.bluePos.x = 250 * i + 180
                 newEnemy.actorHead.bluePos.y = 602
@@ -463,6 +469,7 @@ const BeatemApp = {
         //     this.createHead(minigame1.heads[i])
         // }
         this.createBackground()
+        this.bgPosition = { x: 0, y: 60 }
     },
 
     createMinigame2() {
@@ -785,6 +792,8 @@ const BeatemApp = {
             maxPlayer.actorHead.resultsImage.instance.src = "./images/minigame/" + rank + ".png"
             arr.splice(arr.indexOf(maxPlayer), 1)
         }
+        this.gameCompleted.enabled = true
+        this.setDelayLaunchNextLevel()
 
 
     },

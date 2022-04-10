@@ -76,14 +76,14 @@ class Enemy extends Character {
     }
 
     playBallonMinigame() {
-        if (this.app.frames % (Math.floor(Math.random() * 60)) == 0) {
+        if (this.app.frames % (Math.floor(Math.random() * 35)) == 0) {
             this.blowBalloon()
 
         }
     }
 
     playSlapMinigame() {
-        if (this.app.frames % (Math.floor(Math.random() * 60)) == 0) {
+        if (this.app.frames % (Math.floor(Math.random() * 35)) == 0) {
             this.slapHead()
         }
     }
@@ -140,7 +140,7 @@ class Enemy2 extends Enemy {
         super(app, posX, posY, posZ, width, height)
 
         this.playerCharacter = "ball"
-
+        this.characterDmg = 30
         this.rectangleColor = "pink"
         this.characterSpeed = Math.random() * 1.5 + 3
 
@@ -172,8 +172,37 @@ class Enemy3 extends Enemy {
         this.characterLive -= dmg
 
         //solo para comprobar como recibe daño
-        this.actorSize.h += 25
-        this.actorSize.w += 25
+        this.actorSize.h += 10
+        this.actorSize.w += 10
+        this.startEstheticDmg()
+        this.hitAudio.play()
+    }
+}
+
+class Enemy4 extends Enemy {
+
+    constructor(app, posX, posY, posZ, width, height) {
+        super(app, posX, posY, posZ, width, height)
+        this.actorSize = { w: 300, h: 300 }
+        this.enemySize = { w: width, h: height }
+        this.playerCharacter = "krusty"
+        this.characterDmg = 40
+        this.rectangleColor = "black"
+        this.characterSpeed = Math.random() * 1.5 + 5
+
+        this.characterLive = 5000000
+
+    }
+
+
+    receiveDmg(dmg) {
+
+
+        this.characterLive -= dmg
+
+        //solo para comprobar como recibe daño
+        this.actorSize.h += 20
+        this.actorSize.w += 20
         this.startEstheticDmg()
         this.hitAudio.play()
     }
