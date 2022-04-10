@@ -18,6 +18,7 @@ const BeatemApp = {
     introImagePre: { instance: undefined, frame: 7, totalFrames: 300 },
     introImage: { instance: undefined, frame: 7, totalFrames: 300 },
     minigameBg: { instance: undefined, source: "./images/minigame/bg2.png" },
+    startButton: { instance: undefined, source: "./images/misc/pressEnter.png" },
     minigameEnded: false,
 
 
@@ -68,13 +69,35 @@ const BeatemApp = {
         this.gameCompleted.instance = new Image()
         this.gameCompleted.instance.src = this.gameCompleted.source
 
+        this.startButton.instance = new Image()
+        this.startButton.instance.src = this.startButton.source
+
+        this.gameCompleted.instance = new Image()
+        this.gameCompleted.instance.src = this.gameCompleted.source
+
         this.sfxAudio.instance1 = new Audio
         this.sfxAudio.instance2 = new Audio
 
 
-        this.drawBlackScreen()
+        // this.drawBlackScreen()
+        this.drawStartButton()
+
         // this.launchLevel(5)
 
+
+    },
+
+    drawStartButton() {
+        this.currentInterval = setInterval(() => {
+            this.clearAll()
+            this.drawBlackScreen()
+            this.ctx.drawImage(
+                this.startButton.instance,
+                this.gameSize.w / 2 - 200,
+                this.gameSize.h / 2 - 25,
+                400,
+                50)
+        }, 1000 / this.fps)
 
     },
 
