@@ -3,7 +3,7 @@ class Head extends Actor {
     constructor(app, posX, posY, posZ, width, height) {
         super(app, posX, posY, posZ, width, height)
 
-        this.headLimit = 100
+        this.headLimit = 300
         this.headSize = 0
         this.bluePos = { x: 0, y: 0, z: 0 }
         this.image = { instance: undefined, frameIndex: 0, totalFrames: 1, source: "./images/enemies/player.png", animTime: 10 }
@@ -51,10 +51,10 @@ class Head extends Actor {
         if (this.resultsImage.enabled) {
             this.app.ctx.drawImage(
                 this.resultsImage.instance,
-                this.bluePos.x - 170,
+                this.bluePos.x - 110,
                 200,
-                400,
-                100)
+                340,
+                85)
         }
 
 

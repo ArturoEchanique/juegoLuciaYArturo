@@ -17,7 +17,7 @@ const BeatemApp = {
     //pre to avoid flickering
     introImagePre: { instance: undefined, frame: 7, totalFrames: 300 },
     introImage: { instance: undefined, frame: 7, totalFrames: 300 },
-    minigameBg: { instance: undefined, source: "./images/misc/miniBg1.png" },
+    minigameBg: { instance: undefined, source: "./images/minigame/bg2.png" },
     minigameEnded: false,
 
 
@@ -421,12 +421,12 @@ const BeatemApp = {
         this.minigameBg.instance.src = this.minigameBg.source
         // this.createPlayer()
         for (let i = 0; i < this.players.length; i++) {
-            this.players[i].actorPos.x = 270 * i + 190
-            this.players[i].actorPos.z = 0
+            this.players[i].actorPos.x = 220 * i + 190
+            this.players[i].actorPos.z = 30
             this.players[i].actorHead = this.createHead(minigame1.heads[i])
             this.players[i].actorHead.image.instance.src = "./images/minigame/" + this.players[i].playerCharacter + ".png"
-            this.players[i].actorHead.bluePos.x = 270 * i + 180
-            this.players[i].actorHead.bluePos.y = 635
+            this.players[i].actorHead.bluePos.x = 250 * i + 180
+            this.players[i].actorHead.bluePos.y = 606
             this.players[i].stopAnimation = true
             this.players[i].actorSize = { w: 300, h: 300 }
             this.players[i].changeState("blow")
@@ -450,9 +450,10 @@ const BeatemApp = {
                 })
                 newEnemy.actorHead.image.instance.src = "./images/minigame/" + newEnemy.playerCharacter + ".png"
                 newEnemy.actorSize = { w: 300, h: 300 }
-                newEnemy.actorPos.z = 0
-                newEnemy.actorHead.bluePos.x = 270 * i + 180
-                newEnemy.actorHead.bluePos.y = 635
+                newEnemy.actorPos.z = 30
+                newEnemy.actorPos.x = 250 * i + 180
+                newEnemy.actorHead.bluePos.x = 250 * i + 180
+                newEnemy.actorHead.bluePos.y = 602
                 newEnemy.changeState("blow")
 
 
@@ -760,30 +761,32 @@ const BeatemApp = {
         this.playSound("./music/result.mp3")
         let arr = [...this.players]
         arr.push(...this.enemies)
-        arr.forEach(player => player.actorHead.resultsImage.enabled = true)
         let rank = 0
+
+        for (let i = 0; i < arr.length; i++) {
+            console.log(arr[i].playerCharacter, arr[i].actorHead.headSize)
+
+        }
+
         while (arr.length > 0) {
             rank++
             let max = -1
-            let maxHead = undefined
+            let maxPlayer = undefined
             for (let i = 0; i < arr.length; i++) {
+
                 if (arr[i].actorHead.headSize > max) {
-                    // arr[i].resultsImage.enabled = true
                     max = arr[i].actorHead.headSize
-                    maxHead = arr[i].actorHead
+                    maxPlayer = arr[i]
                 }
             }
-            maxHead.resultsImage.enabled = true
-            maxHead.resultsImage.instance.src = "./images/minigame/" + rank + ".png"
-            console.log("rank asigned", rank)
 
-
-            arr.splice(arr.indexOf(maxHead), 1)
-            console.log(arr.length)
+            maxPlayer.actorHead.resultsImage.enabled = true
+            if (rank == 1) maxPlayer.characterLive = 500
+            maxPlayer.actorHead.resultsImage.instance.src = "./images/minigame/" + rank + ".png"
+            arr.splice(arr.indexOf(maxPlayer), 1)
         }
 
-        // arr.forEach(player => player.actorHead.resultsImage.enabled = true)
-        // w
+
     },
 
     //tambien hay que hacer que encuanto encuentre un objetivo que beneficie solo a ese y haga break, por lo que

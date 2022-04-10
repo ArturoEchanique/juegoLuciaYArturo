@@ -402,7 +402,7 @@ const characterAnimSizeWData = {
 
 const characterAnimSizeHData = {
 
-    homer: { idle: 1, walk: 1, attack: 1.1, blow: 1 },
+    homer: { idle: 1, walk: 1, attack: 1.1, blow: .85 },
     marge: { idle: 1.1, walk: 1.1, attack: 1.15, blow: 1 },
     bart: { idle: 1, walk: 1, attack: 1.1, blow: .6 },
     lisa: { idle: .85, walk: .8, attack: .8, blow: .6 },
@@ -432,37 +432,37 @@ var minigame1 = {
     heads: [
         {
             class: "Head",
-            location: { x: 145, y: 140, z: 000 },
+            location: { x: 135, y: 160, z: 000 },
         },
         {
             class: "Head",
-            location: { x: 425, y: 140, z: 000 },
+            location: { x: 380, y: 160, z: 000 },
         },
         {
             class: "Head",
-            location: { x: 700, y: 140, z: 000 },
+            location: { x: 645, y: 160, z: 000 },
         },
         {
             class: "Head",
-            location: { x: 960, y: 140, z: 000 },
+            location: { x: 900, y: 160, z: 000 },
         }
     ],
     enemies: [
         {
             class: "Enemy1",
-            location: { x: 190, y: 0, z: 100 },
+            location: { x: 190, y: 0, z: 0 },
         },
         {
             class: "Enemy1",
-            location: { x: 470, y: 0, z: 100 },
+            location: { x: 470, y: 0, z: 0 },
         },
         {
             class: "Enemy1",
-            location: { x: 745, y: 0, z: 100 },
+            location: { x: 745, y: 0, z: 0 },
         },
         {
             class: "Enemy1",
-            location: { x: 1000, y: 0, z: 100 },
+            location: { x: 1000, y: 0, z: 0 },
         }
     ],
     completed: false,
